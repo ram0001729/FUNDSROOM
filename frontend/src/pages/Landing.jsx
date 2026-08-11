@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { CheckCircle2 } from 'lucide-react';
 import useAuthStore from '../store/authStore';
 
 const Landing = () => {
@@ -128,33 +129,42 @@ const Landing = () => {
       </section>
 
       {/* 4. DISCOVER LOCAL SERVICES */}
-      <section id="about" className="w-full bg-[#dff5c7] flex justify-center py-24 px-8">
+      <section id="about" className="w-full bg-[#dff5c7]/60 flex justify-center py-24 px-8">
         <div className="max-w-[1400px] w-full flex flex-col lg:flex-row items-center justify-between gap-16">
           
           {/* Left Text */}
-          <div className="flex-1 max-w-2xl text-[#0b1727]">
-            <h2 className="text-4xl md:text-[44px] font-black leading-[1.1] mb-8 tracking-tight">
-              Manage Wholesale Distribution<br/>Workflows, Instantly
+          <div className="flex-1 max-w-2xl text-gray-800">
+            <h2 className="text-3xl md:text-4xl lg:text-[42px] font-extrabold text-[#1B512D] leading-[1.2] mb-6 tracking-tight">
+              Manage Wholesale Distribution Workflows, Instantly
             </h2>
-            <p className="text-xl font-bold mb-8">
+            <p className="text-lg md:text-xl font-semibold text-gray-800 mb-6 leading-relaxed">
               Empower your internal teams with a reliable ERP system — fast, reliable, and hassle-free.
             </p>
-            <p className="text-[19px] font-black mb-6 leading-snug">
-              <span className="text-[#e34234] font-bold">Distribu<span className="text-[#1B512D]">C</span>ore</span> connects your sales, warehouse, and accounts teams<br/>
-              using a centralized business platform.
+            <p className="text-base md:text-lg font-medium text-gray-700 mb-4 leading-relaxed">
+              <span className="text-[#e34234] font-bold">Distribu<span className="text-[#1B512D]">C</span>ore</span> connects your sales, warehouse, and accounts teams using a centralized business platform.
             </p>
-            <p className="text-[18px] font-medium mb-8 leading-relaxed opacity-90">
-              Many distribution businesses struggle with scattered data, while teams struggle<br/>
-              to track stock and process sales in urgent situations.<br/>
-              <span className="text-[#e34234] font-bold">Distribu<span className="text-[#1B512D]">C</span>ore</span> bridges this gap with full-stack workflow management.
+            <p className="text-base md:text-lg font-normal text-gray-600 mb-8 leading-relaxed">
+              Many distribution businesses struggle with scattered data, while teams struggle to track stock and process sales in urgent situations. <span className="text-[#e34234] font-semibold">Distribu<span className="text-[#1B512D]">C</span>ore</span> bridges this gap with full-stack workflow management.
             </p>
             
-            <ul className="space-y-4 font-black text-[18px] opacity-90 mt-4">
-              <li>• Centralized customer CRM</li>
-              <li>• Real-time stock tracking</li>
-              <li>• Automated sales challans & invoices</li>
-              <li>• Complete team access for sales & warehouse</li>
-            </ul>
+            <div className="space-y-3 font-semibold text-base md:text-lg text-[#1B512D] mt-6">
+              <div className="flex items-center gap-3">
+                <CheckCircle2 size={20} className="text-[#1B512D] flex-shrink-0" />
+                <span>Centralized customer CRM</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <CheckCircle2 size={20} className="text-[#1B512D] flex-shrink-0" />
+                <span>Real-time stock tracking</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <CheckCircle2 size={20} className="text-[#1B512D] flex-shrink-0" />
+                <span>Automated sales challans & invoices</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <CheckCircle2 size={20} className="text-[#1B512D] flex-shrink-0" />
+                <span>Complete team access for sales & warehouse</span>
+              </div>
+            </div>
           </div>
 
           {/* Right SVG Diagram */}
@@ -162,7 +172,7 @@ const Landing = () => {
             <img 
               src="https://res.cloudinary.com/dp5rqtjnk/image/upload/v1766664278/brand_loyalty-bro_katozf.svg" 
               alt="Discover local services" 
-              className="w-full max-w-[550px] object-contain" 
+              className="w-full max-w-[550px] object-contain drop-shadow-md" 
             />
           </div>
         </div>
