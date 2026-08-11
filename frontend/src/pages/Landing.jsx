@@ -221,38 +221,38 @@ const Landing = () => {
       </section>
 
       {/* 7. FOOTER */}
-      <footer id="contact" className="w-full bg-[#1b2b3a] text-white py-16 px-10">
+      <footer id="contact" className="w-full bg-gradient-to-br from-[#dff5c7] via-[#e6fcf0] to-[#dff5c7] text-gray-800 py-16 px-10 border-t border-emerald-200/60">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
           
           <div>
             <div className="mb-4">
-              <img src="/distribucore-logo.png" alt="DistribuCore" className="h-10 object-contain" />
+              <img src="/distribucore-logo.png" alt="DistribuCore" className="h-10 object-contain drop-shadow-sm" />
             </div>
-            <p className="text-gray-300 font-medium mb-2">+91 908765654</p>
-            <p className="text-gray-300 font-medium">distribucoreinfo@distribucore.com</p>
+            <p className="text-[#1B512D] font-bold mb-2">+91 908765654</p>
+            <p className="text-[#1B512D] font-semibold">distribucoreinfo@distribucore.com</p>
           </div>
 
           <div>
-            <h4 className="text-lg font-bold mb-4 text-gray-200">Quick Links</h4>
-            <ul className="space-y-3 text-gray-400">
-              <li className="hover:text-white cursor-pointer transition-colors"><Link to="/dashboard">Dashboard</Link></li>
-              <li className="hover:text-white cursor-pointer transition-colors"><Link to="/products">Stock Management</Link></li>
-              <li className="hover:text-white cursor-pointer transition-colors"><Link to="/transactions">Transactions</Link></li>
-              <li className="hover:text-white cursor-pointer transition-colors"><Link to="/customers">Customer CRM</Link></li>
+            <h4 className="text-lg font-extrabold mb-4 text-[#1B512D]">Quick Links</h4>
+            <ul className="space-y-3 text-gray-700 font-semibold text-sm">
+              <li className="hover:text-[#1B512D] cursor-pointer transition-colors"><Link to="/dashboard">Dashboard</Link></li>
+              <li className="hover:text-[#1B512D] cursor-pointer transition-colors"><Link to="/products">Stock Management</Link></li>
+              <li className="hover:text-[#1B512D] cursor-pointer transition-colors"><Link to="/transactions">Transactions</Link></li>
+              <li className="hover:text-[#1B512D] cursor-pointer transition-colors"><Link to="/customers">Customer CRM</Link></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="text-lg font-bold mb-4 text-gray-200">Legal</h4>
-            <ul className="space-y-3 text-gray-400">
-              <li className="hover:text-white cursor-pointer transition-colors">Terms & conditions</li>
-              <li className="hover:text-white cursor-pointer transition-colors">Privacy Policy</li>
-              <li className="hover:text-white cursor-pointer transition-colors">Refund Policy</li>
+            <h4 className="text-lg font-extrabold mb-4 text-[#1B512D]">Legal</h4>
+            <ul className="space-y-3 text-gray-700 font-semibold text-sm">
+              <li className="hover:text-[#1B512D] cursor-pointer transition-colors">Terms & conditions</li>
+              <li className="hover:text-[#1B512D] cursor-pointer transition-colors">Privacy Policy</li>
+              <li className="hover:text-[#1B512D] cursor-pointer transition-colors">Refund Policy</li>
             </ul>
           </div>
 
         </div>
-        <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-gray-700 text-center text-gray-500 text-sm">
+        <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-[#1B512D]/20 text-center text-[#1B512D] font-bold text-sm">
           © {new Date().getFullYear()} DistribuCore. All rights reserved.
         </div>
       </footer>
