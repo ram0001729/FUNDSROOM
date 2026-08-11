@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import api from '../api/axios';
 import { FilePlus, Eye, CheckCircle, XCircle, Download, X, Package, User, Calendar, Hash } from 'lucide-react';
 import { jsPDF } from 'jspdf';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 
 const Challans = () => {
   const [challans, setChallans] = useState([]);
@@ -38,7 +38,6 @@ const Challans = () => {
 
   const fetchDependencies = async () => {
     try {
-      // For dropdowns, we might want all (or implement searchable dropdowns). Assuming reasonable size for MVP.
       const [custRes, prodRes] = await Promise.all([
         api.get('/customers?limit=100'),
         api.get('/products?limit=100')
@@ -226,7 +225,7 @@ const Challans = () => {
         totalQty = challanData.total_quantity || 0;
       }
 
-      doc.autoTable({
+      const tableOptions = {
         startY: 70,
         head: [tableColumn],
         body: tableRows,
@@ -244,9 +243,15 @@ const Challans = () => {
         },
         theme: 'grid',
         margin: { left: 14, right: 14 },
-      });
+      };
 
-      const finalY = doc.lastAutoTable.finalY + 8;
+      if (typeof doc.autoTable === 'function') {
+        doc.autoTable(tableOptions);
+      } else {
+        autoTable(doc, tableOptions);
+      }
+
+      const finalY = (doc.lastAutoTable ? doc.lastAutoTable.finalY : 120) + 8;
 
       // --- Total Row ---
       doc.setFillColor(27, 81, 45);
@@ -279,7 +284,7 @@ const Challans = () => {
 
     } catch (error) {
       console.error('Failed to generate PDF:', error);
-      alert('Failed to generate PDF. Please try again.');
+      alert('Failed to generate PDF invoice for this challan.');
     }
   };
 
