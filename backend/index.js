@@ -50,6 +50,7 @@ const salesOrdersRoutes = require('./routes/sales_orders');
 const reportRoutes = require('./routes/reports');
 const inventoryRoutes = require('./routes/inventory');
 const purchaseRoutes = require('./routes/purchases');
+const userRoutes = require('./routes/users');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/customers', customerRoutes);
@@ -63,6 +64,7 @@ app.use('/api/sales-orders', salesOrdersRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/inventory', inventoryRoutes);
 app.use('/api/purchases', purchaseRoutes);
+app.use('/api/users', userRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

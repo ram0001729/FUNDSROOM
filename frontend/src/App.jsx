@@ -37,6 +37,7 @@ import LowStock from './pages/inventory/LowStock';
 import Warehouses from './pages/inventory/Warehouses';
 
 import Purchases from './pages/Purchases';
+import Users from './pages/Users';
 import Outstanding from './pages/Outstanding';
 
 const PrivateRoute = ({ children }) => {
@@ -106,6 +107,7 @@ const App = () => {
           <Route path="/payments/history" element={<Payments />} />
           <Route path="/payments/outstanding" element={<Outstanding />} />
           
+          <Route path="/users" element={<Users />} />
           <Route path="/reports/sales" element={<Reports defaultMetric="sales" />} />
           <Route path="/reports/stock" element={<Products />} />
           <Route path="/reports/payments" element={<Payments />} />
