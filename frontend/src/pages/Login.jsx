@@ -36,16 +36,17 @@ const Login = () => {
   };
 
 
-  const demoLogin = (role) => {
+  const selectRole = (role) => {
     const roles = {
       Admin: { user: 'admin', pass: 'admin123' },
       Sales: { user: 'sales_user', pass: 'admin123' },
       Warehouse: { user: 'warehouse_user', pass: 'admin123' },
       Accounts: { user: 'accounts_user', pass: 'admin123' }
     };
-    setUsername(roles[role].user);
-    setPassword(roles[role].pass);
-    authenticate(roles[role].user, roles[role].pass);
+    if (roles[role]) {
+      setUsername(roles[role].user);
+      setPassword(roles[role].pass);
+    }
   };
 
   return (
@@ -66,12 +67,12 @@ const Login = () => {
 
         {/* 1. SELECT ROLE FIRST */}
         <div className="mb-6">
-          <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-2">Select Login Role</label>
+          <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-2">Select Login Role Preset</label>
           <div className="grid grid-cols-4 gap-1.5 p-1.5 bg-gray-100 rounded-xl border border-gray-200/80">
             <button 
               type="button" 
-              onClick={() => demoLogin('Admin')} 
-              className={`text-xs font-bold py-2 rounded-lg transition-all text-center ${
+              onClick={() => selectRole('Admin')} 
+              className={`text-xs font-bold py-2 rounded-lg transition-all text-center cursor-pointer ${
                 username === 'admin' 
                   ? 'bg-[#1B512D] text-white shadow-md scale-105' 
                   : 'text-gray-700 hover:bg-white/80'
@@ -81,8 +82,8 @@ const Login = () => {
             </button>
             <button 
               type="button" 
-              onClick={() => demoLogin('Sales')} 
-              className={`text-xs font-bold py-2 rounded-lg transition-all text-center ${
+              onClick={() => selectRole('Sales')} 
+              className={`text-xs font-bold py-2 rounded-lg transition-all text-center cursor-pointer ${
                 username === 'sales_user' 
                   ? 'bg-[#1B512D] text-white shadow-md scale-105' 
                   : 'text-gray-700 hover:bg-white/80'
@@ -92,8 +93,8 @@ const Login = () => {
             </button>
             <button 
               type="button" 
-              onClick={() => demoLogin('Warehouse')} 
-              className={`text-xs font-bold py-2 rounded-lg transition-all text-center ${
+              onClick={() => selectRole('Warehouse')} 
+              className={`text-xs font-bold py-2 rounded-lg transition-all text-center cursor-pointer ${
                 username === 'warehouse_user' 
                   ? 'bg-[#1B512D] text-white shadow-md scale-105' 
                   : 'text-gray-700 hover:bg-white/80'
@@ -103,8 +104,8 @@ const Login = () => {
             </button>
             <button 
               type="button" 
-              onClick={() => demoLogin('Accounts')} 
-              className={`text-xs font-bold py-2 rounded-lg transition-all text-center ${
+              onClick={() => selectRole('Accounts')} 
+              className={`text-xs font-bold py-2 rounded-lg transition-all text-center cursor-pointer ${
                 username === 'accounts_user' 
                   ? 'bg-[#1B512D] text-white shadow-md scale-105' 
                   : 'text-gray-700 hover:bg-white/80'
