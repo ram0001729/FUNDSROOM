@@ -15,7 +15,6 @@ const Landing = () => {
   };
 
   return (
-  return (
     <div className="font-sans flex flex-col min-h-screen bg-gradient-to-b from-[#a7f3d0]/60 via-[#bbf7d0]/30 to-slate-50 overflow-x-hidden relative text-gray-800">
       
       {/* 1. TOP FLOATING MINT HEADER */}
