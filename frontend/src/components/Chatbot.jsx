@@ -24,57 +24,6 @@ const Chatbot = ({ onClose }) => {
     return tid;
   });
 
-  const [position, setPosition] = useState(() => {
-    // Default position: bottom-right
-    const w = typeof window !== 'undefined' ? window.innerWidth : 1200;
-    const h = typeof window !== 'undefined' ? window.innerHeight : 800;
-    return { x: w - 424, y: h - 624 - 96 }; // 400w, 600h, roughly matching bottom-24 right-6
-  });
-  const [isDragging, setIsDragging] = useState(false);
-  const dragStart = useRef({ x: 0, y: 0, initX: 0, initY: 0 });
-
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      if (!isDragging) return;
-      
-      let newX = dragStart.current.initX + (e.clientX - dragStart.current.x);
-      let newY = dragStart.current.initY + (e.clientY - dragStart.current.y);
-      
-      // Keep within bounds
-      if (newX < 0) newX = 0;
-      if (newY < 0) newY = 0;
-      if (newX > window.innerWidth - 400) newX = window.innerWidth - 400;
-      if (newY > window.innerHeight - 600) newY = window.innerHeight - 600;
-
-      setPosition({ x: newX, y: newY });
-    };
-
-    const handleMouseUp = () => {
-      setIsDragging(false);
-    };
-
-    if (isDragging) {
-      window.addEventListener('mousemove', handleMouseMove);
-      window.addEventListener('mouseup', handleMouseUp);
-    }
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [isDragging]);
-
-  const handleMouseDown = (e) => {
-    // Don't drag if clicking the close button
-    if (e.target.closest('button')) return;
-    setIsDragging(true);
-    dragStart.current = {
-      x: e.clientX,
-      y: e.clientY,
-      initX: position.x,
-      initY: position.y
-    };
-  };
-
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -170,15 +119,11 @@ const Chatbot = ({ onClose }) => {
 
   return (
     <div 
-      className="fixed w-[400px] bg-white rounded-[16px] shadow-2xl border border-[#e5e7eb] z-50 flex flex-col h-[600px] overflow-hidden animate-fade-in font-sans"
-      style={{ left: `${position.x}px`, top: `${position.y}px` }}
+      className="fixed bottom-24 right-4 md:right-8 w-[380px] max-w-[calc(100vw-2rem)] h-[580px] max-h-[calc(100vh-8rem)] bg-white rounded-2xl shadow-2xl border border-gray-200 z-50 flex flex-col overflow-hidden animate-fade-in font-sans"
     >
       
       {/* Header */}
-      <div 
-        className="bg-[#f9fafb] text-[#111827] p-5 flex justify-between items-center shadow-sm border-b border-[#e5e7eb] relative z-10 cursor-grab active:cursor-grabbing"
-        onMouseDown={handleMouseDown}
-      >
+      <div className="bg-[#f9fafb] text-[#111827] p-4 flex justify-between items-center shadow-sm border-b border-[#e5e7eb] relative z-10">
         <div className="flex items-center gap-3 relative z-10">
           <div className="w-10 h-10 rounded-full flex items-center justify-center bg-gradient-to-br from-[#e34234] via-rose-500 to-orange-500 text-white shadow-[0_0_15px_rgba(239,68,68,0.5)]">
              <Bot size={22} />
