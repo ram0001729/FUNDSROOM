@@ -58,26 +58,79 @@ const Login = () => {
         </div>
         
         {error && (
-          <div className="mb-4 p-3 bg-red-100 border border-red-200 text-red-700 rounded-lg text-sm">
+          <div className="mb-4 p-3 bg-red-100 border border-red-200 text-red-700 rounded-lg text-sm font-medium">
             {error}
           </div>
         )}
 
+        {/* 1. SELECT ROLE FIRST */}
+        <div className="mb-6">
+          <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-2">Select Login Role</label>
+          <div className="grid grid-cols-4 gap-1.5 p-1.5 bg-gray-100 rounded-xl border border-gray-200/80">
+            <button 
+              type="button" 
+              onClick={() => demoLogin('Admin')} 
+              className={`text-xs font-bold py-2 rounded-lg transition-all text-center ${
+                username === 'admin' 
+                  ? 'bg-[#1B512D] text-white shadow-md scale-105' 
+                  : 'text-gray-700 hover:bg-white/80'
+              }`}
+            >
+              Admin
+            </button>
+            <button 
+              type="button" 
+              onClick={() => demoLogin('Sales')} 
+              className={`text-xs font-bold py-2 rounded-lg transition-all text-center ${
+                username === 'sales_user' 
+                  ? 'bg-[#1B512D] text-white shadow-md scale-105' 
+                  : 'text-gray-700 hover:bg-white/80'
+              }`}
+            >
+              Sales
+            </button>
+            <button 
+              type="button" 
+              onClick={() => demoLogin('Warehouse')} 
+              className={`text-xs font-bold py-2 rounded-lg transition-all text-center ${
+                username === 'warehouse_user' 
+                  ? 'bg-[#1B512D] text-white shadow-md scale-105' 
+                  : 'text-gray-700 hover:bg-white/80'
+              }`}
+            >
+              Warehouse
+            </button>
+            <button 
+              type="button" 
+              onClick={() => demoLogin('Accounts')} 
+              className={`text-xs font-bold py-2 rounded-lg transition-all text-center ${
+                username === 'accounts_user' 
+                  ? 'bg-[#1B512D] text-white shadow-md scale-105' 
+                  : 'text-gray-700 hover:bg-white/80'
+              }`}
+            >
+              Accounts
+            </button>
+          </div>
+        </div>
+
         <form onSubmit={handleLogin} className="space-y-5">
+          {/* 2. EMAIL / USERNAME */}
           <div>
-            <label className="block text-sm font-medium text-black mb-1">Email / Username</label>
+            <label className="block text-sm font-semibold text-gray-800 mb-1">Email / Username</label>
             <input 
               type="text" 
               className="input-field" 
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="Enter your email"
+              placeholder="Enter your email or username"
               required
             />
           </div>
           
+          {/* 3. PASSWORD */}
           <div>
-            <label className="block text-sm font-medium text-black mb-1">Password</label>
+            <label className="block text-sm font-semibold text-gray-800 mb-1">Password</label>
             <div className="relative">
               <input 
                 type={showPassword ? "text" : "password"} 
@@ -100,7 +153,7 @@ const Login = () => {
           
           <button 
             type="submit" 
-            className="w-full btn-primary py-2.5 mt-2 flex justify-center items-center"
+            className="w-full btn-primary py-3 mt-2 flex justify-center items-center font-bold text-sm shadow-md hover:shadow-lg transition-all"
             disabled={loading}
           >
             {loading ? (
@@ -111,16 +164,6 @@ const Login = () => {
             ) : 'Sign In'}
           </button>
         </form>
-        
-        <div className="mt-6">
-          <p className="text-center text-sm text-gray-500 mb-3 border-t border-gray-100 pt-4">Or Quick Login As:</p>
-          <div className="grid grid-cols-2 gap-2">
-            <button type="button" onClick={() => demoLogin('Admin')} className="text-xs font-bold py-2.5 px-3 bg-[#1B512D] text-white rounded hover:bg-[#154124] shadow-sm transition-all hover:shadow text-center">Admin</button>
-            <button type="button" onClick={() => demoLogin('Sales')} className="text-xs font-bold py-2.5 px-3 bg-[#1B512D] text-white rounded hover:bg-[#154124] shadow-sm transition-all hover:shadow text-center">Sales</button>
-            <button type="button" onClick={() => demoLogin('Warehouse')} className="text-xs font-bold py-2.5 px-3 bg-[#1B512D] text-white rounded hover:bg-[#154124] shadow-sm transition-all hover:shadow text-center">Warehouse</button>
-            <button type="button" onClick={() => demoLogin('Accounts')} className="text-xs font-bold py-2.5 px-3 bg-[#1B512D] text-white rounded hover:bg-[#154124] shadow-sm transition-all hover:shadow text-center">Accounts</button>
-          </div>
-        </div>
         
         <div className="mt-6 text-center text-sm text-gray-500">
           <p>Don't have an account? <Link to="/register" className="text-green-600 font-medium hover:underline">Create one</Link></p>
