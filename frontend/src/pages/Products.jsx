@@ -40,10 +40,12 @@ const Products = () => {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const res = await api.get('/products');
-      setProducts(res.data.data || []);
+      const res = await api.get('/products?limit=100');
+      const list = Array.isArray(res.data?.data) ? res.data.data : Array.isArray(res.data) ? res.data : [];
+      setProducts(list);
     } catch (error) {
       console.error('Failed to fetch products:', error);
+      setProducts([]);
     } finally {
       setLoading(false);
     }

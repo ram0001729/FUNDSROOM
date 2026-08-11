@@ -34,6 +34,7 @@ const Dashboard = () => {
   const [reportData, setReportData] = useState(null);
   const [recentSales, setRecentSales] = useState([]);
   const [recentInvoices, setRecentInvoices] = useState([]);
+  const [recentMovements, setRecentMovements] = useState([]);
   const [lowStockCount, setLowStockCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
@@ -44,16 +45,18 @@ const Dashboard = () => {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      const [reportRes, challansRes, productsRes, invoicesRes] = await Promise.all([
+      const [reportRes, challansRes, productsRes, invoicesRes, movementsRes] = await Promise.all([
         api.get('/reports'),
         api.get('/challans?limit=5'),
         api.get('/products?limit=100'),
-        api.get('/invoices?limit=5')
+        api.get('/invoices?limit=5'),
+        api.get('/products/movements/log').catch(() => ({ data: [] }))
       ]);
 
       setReportData(reportRes.data);
       setRecentSales(challansRes.data.data || []);
       setRecentInvoices(invoicesRes.data.data || []);
+      setRecentMovements(movementsRes.data || []);
       
       const products = productsRes.data.data || [];
       const lowStock = products.filter(p => p.current_stock <= p.min_stock).length;
@@ -404,36 +407,110 @@ const Dashboard = () => {
   );
 
   const renderWarehouseDashboard = () => (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-      <div className="bg-gradient-to-br from-blue-50 to-white rounded-2xl border border-blue-100 shadow-sm p-5">
-        <div className="flex justify-between items-start mb-2">
-          <div className="text-[13px] text-blue-600 font-semibold uppercase">Total Products</div>
-          <div className="p-2 bg-blue-100 rounded-lg text-blue-600"><Package size={16} /></div>
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div className="bg-gradient-to-br from-blue-50 to-white rounded-2xl border border-blue-100 shadow-sm p-5 hover:-translate-y-1 transition-all duration-300">
+          <div className="flex justify-between items-start mb-2">
+            <div className="text-[13px] text-blue-600 font-semibold uppercase">Total Products</div>
+            <div className="p-2 bg-blue-100 rounded-lg text-blue-600"><Package size={16} /></div>
+          </div>
+          <div className="text-2xl font-bold text-gray-800">{reportData?.warehouse_dashboard_stats?.total_products || 0}</div>
         </div>
-        <div className="text-2xl font-bold text-gray-800">{reportData?.warehouse_dashboard_stats?.total_products || 0}</div>
-      </div>
-      <div className="bg-gradient-to-br from-red-50 to-white rounded-2xl border border-red-100 shadow-sm p-5">
-        <div className="flex justify-between items-start mb-2">
-          <div className="text-[13px] text-red-600 font-semibold uppercase">Low Stock Items</div>
-          <div className="p-2 bg-red-100 rounded-lg text-red-600"><AlertTriangle size={16} /></div>
+
+        <div className="bg-gradient-to-br from-red-50 to-white rounded-2xl border border-red-100 shadow-sm p-5 hover:-translate-y-1 transition-all duration-300">
+          <div className="flex justify-between items-start mb-2">
+            <div className="text-[13px] text-red-600 font-semibold uppercase">Low Stock Items</div>
+            <div className="p-2 bg-red-100 rounded-lg text-red-600"><AlertTriangle size={16} /></div>
+          </div>
+          <div className="text-2xl font-bold text-red-600">{lowStockCount}</div>
         </div>
-        <div className="text-2xl font-bold text-red-600">{lowStockCount}</div>
-      </div>
-      <div className="bg-gradient-to-br from-amber-50 to-white rounded-2xl border border-amber-100 shadow-sm p-5">
-        <div className="flex justify-between items-start mb-2">
-          <div className="text-[13px] text-amber-600 font-semibold uppercase">Pending Dispatches</div>
-          <div className="p-2 bg-amber-100 rounded-lg text-amber-600"><Truck size={16} /></div>
+
+        <div className="bg-gradient-to-br from-amber-50 to-white rounded-2xl border border-amber-100 shadow-sm p-5 hover:-translate-y-1 transition-all duration-300">
+          <div className="flex justify-between items-start mb-2">
+            <div className="text-[13px] text-amber-600 font-semibold uppercase">Pending Dispatches</div>
+            <div className="p-2 bg-amber-100 rounded-lg text-amber-600"><Truck size={16} /></div>
+          </div>
+          <div className="text-2xl font-bold text-gray-800">{reportData?.warehouse_dashboard_stats?.pending_dispatches || 0}</div>
         </div>
-        <div className="text-2xl font-bold text-gray-800">{reportData?.warehouse_dashboard_stats?.pending_dispatches || 0}</div>
-      </div>
-      <div className="bg-gradient-to-br from-emerald-50 to-white rounded-2xl border border-emerald-100 shadow-sm p-5">
-        <div className="flex justify-between items-start mb-2">
-          <div className="text-[13px] text-emerald-600 font-semibold uppercase">Pending POs</div>
-          <div className="p-2 bg-emerald-100 rounded-lg text-emerald-600"><FileText size={16} /></div>
+
+        <div className="bg-gradient-to-br from-emerald-50 to-white rounded-2xl border border-emerald-100 shadow-sm p-5 hover:-translate-y-1 transition-all duration-300">
+          <div className="flex justify-between items-start mb-2">
+            <div className="text-[13px] text-emerald-600 font-semibold uppercase">Pending POs</div>
+            <div className="p-2 bg-emerald-100 rounded-lg text-emerald-600"><FileText size={16} /></div>
+          </div>
+          <div className="text-2xl font-bold text-gray-800">{reportData?.overall_stats?.pending_purchases || 0}</div>
         </div>
-        <div className="text-2xl font-bold text-gray-800">0</div>
       </div>
-    </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-4">
+        {/* Recent Stock Movements Table */}
+        <div className="bg-white rounded-[16px] border border-[#e5e7eb] shadow-sm p-5">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-base font-bold text-gray-800">Recent Stock Movements</h3>
+            <Link to="/stock-log" className="text-xs text-[#2563eb] hover:underline font-bold">View Log</Link>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm">
+              <thead>
+                <tr className="bg-gray-50 border-b border-gray-100 text-gray-500 text-xs">
+                  <th className="p-2.5 font-semibold">Product</th>
+                  <th className="p-2.5 font-semibold">Type</th>
+                  <th className="p-2.5 font-semibold">Qty</th>
+                  <th className="p-2.5 font-semibold">Reason</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {recentMovements.slice(0, 5).map((sm, idx) => (
+                  <tr key={idx} className="hover:bg-gray-50/50">
+                    <td className="p-2.5 font-medium text-gray-800">{sm.product_name}</td>
+                    <td className="p-2.5">
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                        sm.movement_type === 'IN' ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'
+                      }`}>
+                        {sm.movement_type}
+                      </span>
+                    </td>
+                    <td className="p-2.5 font-bold text-gray-800">{sm.quantity_changed}</td>
+                    <td className="p-2.5 text-xs text-gray-500">{sm.reason || 'Movement'}</td>
+                  </tr>
+                ))}
+                {recentMovements.length === 0 && (
+                  <tr><td colSpan="4" className="p-4 text-center text-gray-400 text-xs">No recent stock movements.</td></tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Predictive Low Stock Alerts */}
+        <div className="bg-white rounded-[16px] border border-[#e5e7eb] shadow-sm p-5">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-base font-bold text-gray-800 flex items-center gap-2">
+              <AlertTriangle size={18} className="text-red-500" /> Low Stock Alerts
+            </h3>
+            <Link to="/inventory/low-stock" className="text-xs text-[#2563eb] hover:underline font-bold">View Alerts</Link>
+          </div>
+          <div className="space-y-3">
+            {(predictive_alerts || []).map((alertItem, idx) => (
+              <div key={idx} className="p-3 bg-red-50/60 rounded-xl border border-red-100 flex justify-between items-center">
+                <div>
+                  <div className="font-bold text-gray-800 text-sm">{alertItem.name}</div>
+                  <div className="text-xs text-red-600 font-medium">
+                    Current: {alertItem.current_stock} | Min Threshold: {alertItem.min_stock}
+                  </div>
+                </div>
+                <Link to="/products" className="px-3 py-1 bg-red-600 text-white rounded-lg text-xs font-bold hover:bg-red-700 shadow-sm">
+                  Restock
+                </Link>
+              </div>
+            ))}
+            {(!predictive_alerts || predictive_alerts.length === 0) && (
+              <div className="p-6 text-center text-gray-400 text-sm">All inventory levels are healthy!</div>
+            )}
+          </div>
+        </div>
+      </div>
+    </>
   );
 
   const renderAccountsDashboard = () => (
