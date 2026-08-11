@@ -83,7 +83,7 @@ const Layout = () => {
     { name: 'Warehouses', path: '/warehouses', icon: Package, roles: ['Warehouse'], badge: counts.pendingDispatches, badgeColor: 'bg-amber-500' },
     
     // Purchases
-    { name: 'Purchases', path: '/purchases/orders', icon: ShoppingCart, roles: ['Admin'], badge: counts.pendingPurchases, badgeColor: 'bg-emerald-600' },
+    { name: 'Purchases', path: '/purchases/orders', icon: ShoppingCart, roles: ['Admin', 'Warehouse', 'Accounts'], badge: counts.pendingPurchases, badgeColor: 'bg-emerald-600' },
     
     // Sales Operations
     { name: 'Sales', path: '/sales/orders', icon: ShoppingCart, roles: ['Admin', 'Sales'], badge: counts.pendingOrders, badgeColor: 'bg-amber-500' },

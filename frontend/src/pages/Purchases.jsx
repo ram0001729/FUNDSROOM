@@ -29,9 +29,11 @@ const Purchases = () => {
     try {
       setLoading(true);
       const res = await api.get('/purchases');
-      setPurchases(res.data.data || []);
+      const list = Array.isArray(res.data?.data) ? res.data.data : Array.isArray(res.data) ? res.data : [];
+      setPurchases(list);
     } catch (error) {
       console.error('Failed to fetch purchase orders:', error);
+      setPurchases([]);
     } finally {
       setLoading(false);
     }
@@ -208,8 +210,12 @@ const Purchases = () => {
                 <tr key={po.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
                   <td className="p-4 font-bold text-[#1B512D]">{po.po_number}</td>
                   <td className="p-4 text-gray-800 font-medium">{po.supplier_name}</td>
-                  <td className="p-4 text-gray-500 text-sm">{new Date(po.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
-                  <td className="p-4 font-bold text-gray-800">₹{parseFloat(po.total_amount).toLocaleString('en-IN')}</td>
+                  <td className="p-4 text-gray-500 text-sm">
+                    {po.created_at ? new Date(po.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : 'N/A'}
+                  </td>
+                  <td className="p-4 font-bold text-gray-800">
+                    ₹{parseFloat(po.total_amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                  </td>
                   <td className="p-4">
                     <span className={`px-3 py-1 rounded-full text-xs font-bold ${
                       po.status === 'Received' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
