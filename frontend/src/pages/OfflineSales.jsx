@@ -66,19 +66,33 @@ const OfflineSales = () => {
   const handleCreateOrder = async (e) => {
     e.preventDefault();
     try {
-      const itemsToSubmit = formData.items.map(item => {
-        const prod = products.find(p => p.id.toString() === item.product_id.toString());
-        return { ...item, product_name: prod ? prod.name : 'Unknown' };
-      });
+      const itemsToSubmit = formData.items
+        .filter(item => item.product_id)
+        .map(item => {
+          const prod = products.find(p => p.id.toString() === item.product_id.toString());
+          return {
+            product_id: parseInt(item.product_id),
+            product_name: prod ? prod.name : 'Unknown',
+            unit_price: parseFloat(item.unit_price),
+            quantity: parseInt(item.quantity),
+          };
+        });
+
+      if (itemsToSubmit.length === 0) {
+        alert('Please select at least one product.');
+        return;
+      }
+
       await api.post('/sales-orders', {
-        customer_id: formData.customer_id || null,
+        customer_id: formData.customer_id ? parseInt(formData.customer_id) : null,
         sales_source: 'OFFLINE',
         items: itemsToSubmit
       });
       closeModal();
       fetchOrders();
     } catch (error) {
-      alert(error.response?.data?.message || 'Error creating order');
+      console.error('Sales order error:', error.response?.data || error.message);
+      alert(error.response?.data?.message || 'Error creating order. Please try again.');
     }
   };
 
