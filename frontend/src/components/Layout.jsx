@@ -12,7 +12,7 @@ const Layout = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
-  const [language, setLanguage] = useState('EN');
+  const [language, setLanguage] = useState(() => localStorage.getItem('app_language') || 'EN');
   
   const [counts, setCounts] = useState({
     pendingOrders: 0,
@@ -47,12 +47,35 @@ const Layout = () => {
   };
 
   const languages = [
-    { code: 'EN', name: 'English' },
-    { code: 'HI', name: 'Hindi' },
-    { code: 'ES', name: 'Spanish' },
-    { code: 'FR', name: 'French' },
-    { code: 'AR', name: 'Arabic' }
+    { code: 'EN', name: 'English', gt: 'en' },
+    { code: 'HI', name: 'हिंदी (Hindi)', gt: 'hi' },
+    { code: 'GU', name: 'ગુજરાતી (Gujarati)', gt: 'gu' },
+    { code: 'MR', name: 'मराठी (Marathi)', gt: 'mr' },
+    { code: 'TA', name: 'தமிழ் (Tamil)', gt: 'ta' },
+    { code: 'ES', name: 'Español (Spanish)', gt: 'es' },
+    { code: 'FR', name: 'Français (French)', gt: 'fr' },
+    { code: 'AR', name: 'العربية (Arabic)', gt: 'ar' }
   ];
+
+  const handleLanguageChange = (langObj) => {
+    setLanguage(langObj.code);
+    setIsLanguageOpen(false);
+    localStorage.setItem('app_language', langObj.code);
+
+    const targetGtCode = langObj.gt;
+    const domain = window.location.hostname;
+
+    document.cookie = `googtrans=/en/${targetGtCode}; path=/; domain=${domain}`;
+    document.cookie = `googtrans=/en/${targetGtCode}; path=/;`;
+
+    const selectField = document.querySelector('.goog-te-combo');
+    if (selectField) {
+      selectField.value = targetGtCode;
+      selectField.dispatchEvent(new Event('change', { bubbles: true }));
+    } else {
+      window.location.reload();
+    }
+  };
 
   const handleLogout = () => {
     logout();
@@ -164,14 +187,11 @@ const Layout = () => {
                 </button>
                 
                 {isLanguageOpen && (
-                  <div className="absolute right-0 mt-2 w-32 bg-white/90 backdrop-blur-md rounded-2xl shadow-xl border border-white/80 py-1 z-50 overflow-hidden">
+                  <div className="absolute right-0 mt-2 w-44 bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-white/80 py-1 z-50 overflow-hidden">
                     {languages.map((lang) => (
                       <button
                         key={lang.code}
-                        onClick={() => {
-                          setLanguage(lang.code);
-                          setIsLanguageOpen(false);
-                        }}
+                        onClick={() => handleLanguageChange(lang)}
                         className={`w-full text-left px-4 py-2 text-xs font-semibold transition-colors ${
                           language === lang.code 
                             ? 'bg-emerald-100 text-emerald-800 font-bold' 

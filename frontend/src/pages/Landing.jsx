@@ -9,10 +9,16 @@ const Landing = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
 
   const changeLanguage = (langCode) => {
+    const domain = window.location.hostname;
+    document.cookie = `googtrans=/en/${langCode}; path=/; domain=${domain}`;
+    document.cookie = `googtrans=/en/${langCode}; path=/;`;
+
     const selectField = document.querySelector(".goog-te-combo");
     if (selectField) {
       selectField.value = langCode;
-      selectField.dispatchEvent(new Event("change"));
+      selectField.dispatchEvent(new Event("change", { bubbles: true }));
+    } else {
+      window.location.reload();
     }
   };
 
@@ -45,9 +51,13 @@ const Landing = () => {
               className="ml-1 bg-white/90 backdrop-blur-sm text-gray-800 text-[12px] font-extrabold py-2 pl-3 pr-7 rounded-full shadow-sm focus:outline-none cursor-pointer border border-white/90 tracking-wide"
             >
               <option value="en">English</option>
-              <option value="hi">हिन्दी</option>
-              <option value="es">Spanish</option>
-              <option value="fr">French</option>
+              <option value="hi">हिंदी (Hindi)</option>
+              <option value="gu">ગુજરાતી (Gujarati)</option>
+              <option value="mr">मराठी (Marathi)</option>
+              <option value="ta">தமிழ் (Tamil)</option>
+              <option value="es">Español (Spanish)</option>
+              <option value="fr">Français (French)</option>
+              <option value="ar">العربية (Arabic)</option>
             </select>
           </div>
         </header>
