@@ -4,7 +4,7 @@ import useAuthStore from '../store/authStore';
 import api from '../api/axios';
 import Logo from './Logo';
 import Chatbot from './Chatbot';
-import { Bot, BotMessageSquare, LayoutDashboard, Package, ArrowRightLeft, Receipt, BarChart2, Briefcase, Settings, Search, Bell, Home, Globe, ChevronDown, ChevronUp, Users, ShoppingCart, Activity, FileText, CreditCard, Truck } from 'lucide-react';
+import { Bot, BotMessageSquare, LayoutDashboard, Package, ArrowRightLeft, Receipt, BarChart2, Briefcase, Settings, Search, Bell, Home, Globe, ChevronDown, ChevronUp, Users, ShoppingCart, Activity, FileText, CreditCard, Truck, LogOut } from 'lucide-react';
 const Layout = () => {
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
@@ -233,20 +233,22 @@ const Layout = () => {
               {isProfileOpen && (
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setIsProfileOpen(false)}></div>
-                <div className="absolute right-0 mt-2 w-64 bg-white rounded-[16px] shadow-lg border border-[#e5e7eb] z-50 overflow-hidden animate-fade-in">
-                  <div className="p-4 border-b border-[#e5e7eb] bg-[#f9fafb]">
-                    <p className="font-bold text-[#111827] text-[15px]">{user?.name || user?.username}</p>
-                    {user?.email && <p className="text-[12px] text-[#6b7280] mt-0.5">{user.email}</p>}
-                    {user?.mobile && <p className="text-[12px] text-[#6b7280] mt-0.5">{user.mobile}</p>}
-                    <div className="mt-2 inline-block px-2.5 py-1 bg-[#e0e7ff] text-[#4f46e5] text-[11px] font-bold rounded-full border border-[#c7d2fe]">
+                <div className="absolute right-0 mt-3 w-64 bg-white/95 backdrop-blur-xl rounded-[20px] shadow-2xl border border-emerald-100 z-50 overflow-hidden animate-fade-in font-['Plus_Jakarta_Sans',sans-serif]">
+                  <div className="p-4 border-b border-emerald-100/60 bg-gradient-to-br from-[#e6fcf0] via-[#f0fdf4] to-white">
+                    <p className="font-extrabold text-[#1B512D] text-[15px]">{user?.name || user?.username}</p>
+                    {user?.email && <p className="text-[12px] text-gray-500 font-medium mt-0.5">{user.email}</p>}
+                    {user?.mobile && <p className="text-[12px] text-gray-500 font-medium mt-0.5">{user.mobile}</p>}
+                    <div className="mt-2.5 inline-flex items-center gap-1.5 px-3 py-1 bg-[#1B512D] text-[#73E2A7] text-[11px] font-black rounded-full shadow-sm tracking-wide uppercase">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#73E2A7] animate-pulse"></span>
                       Role: {user?.role}
                     </div>
                   </div>
-                  <div className="p-2">
+                  <div className="p-2 bg-white">
                     <button 
                       onClick={() => { setIsProfileOpen(false); handleLogout(); }}
-                      className="w-full text-left px-3 py-2 text-[13px] font-bold text-red-600 hover:bg-red-50 rounded-lg transition-colors flex items-center gap-2"
+                      className="w-full text-left px-3.5 py-2.5 text-[13px] font-extrabold text-[#e34234] hover:bg-rose-50 rounded-xl transition-all flex items-center gap-2 cursor-pointer"
                     >
+                      <LogOut size={15} />
                       Sign Out
                     </button>
                   </div>
