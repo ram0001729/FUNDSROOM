@@ -4,6 +4,71 @@ const bcrypt = require('bcryptjs');
 const db = require('../db');
 const authMiddleware = require('../middleware/authMiddleware');
 
+// Get current user profile
+router.get('/profile', authMiddleware(), async (req, res) => {
+  try {
+    const result = await db.query(
+      'SELECT id, username, email, name, mobile, role, created_at FROM users WHERE id = $1',
+      [req.user.id]
+    );
+    if (result.rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+    res.json({ success: true, data: result.rows[0] });
+  } catch (error) {
+    console.error('Error fetching profile:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// Update personal profile (Name, Mobile, Email)
+router.put('/profile', authMiddleware(), async (req, res) => {
+  const { name, mobile, email } = req.body;
+  if (!name || !email) {
+    return res.status(400).json({ success: false, message: 'Name and email are required' });
+  }
+
+  try {
+    const result = await db.query(
+      `UPDATE users SET name = $1, mobile = $2, email = $3, updated_at = CURRENT_TIMESTAMP 
+       WHERE id = $4 RETURNING id, username, email, name, mobile, role`,
+      [name, mobile || null, email, req.user.id]
+    );
+    res.json({ success: true, data: result.rows[0], message: 'Profile updated successfully' });
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// Change password
+router.put('/change-password', authMiddleware(), async (req, res) => {
+  const { current_password, new_password } = req.body;
+  if (!current_password || !new_password) {
+    return res.status(400).json({ success: false, message: 'Current password and new password are required' });
+  }
+
+  try {
+    const userRes = await db.query('SELECT password_hash FROM users WHERE id = $1', [req.user.id]);
+    if (userRes.rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    const isMatch = await bcrypt.compare(current_password, userRes.rows[0].password_hash);
+    if (!isMatch) {
+      return res.status(400).json({ success: false, message: 'Incorrect current password' });
+    }
+
+    const newHash = await bcrypt.hash(new_password, 10);
+    await db.query('UPDATE users SET password_hash = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2', [newHash, req.user.id]);
+
+    res.json({ success: true, message: 'Password updated successfully' });
+  } catch (error) {
+    console.error('Error changing password:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
 // Get all users
 router.get('/', authMiddleware(['Admin']), async (req, res) => {
   try {
