@@ -20,7 +20,7 @@ router.get('/', authMiddleware(['Admin', 'Sales', 'Warehouse', 'Accounts']), asy
 });
 
 // Generate Invoice from Sales Order (Accounts)
-router.post('/from-order/:sales_order_id', authMiddleware(['Admin', 'Accounts']), async (req, res) => {
+router.post('/from-order/:sales_order_id', authMiddleware(['Admin', 'Accounts', 'Sales']), async (req, res) => {
   const { sales_order_id } = req.params;
 
   const client = await pool.connect();
@@ -32,11 +32,6 @@ router.post('/from-order/:sales_order_id', authMiddleware(['Admin', 'Accounts'])
     if (orderRes.rows.length === 0) throw new Error('Sales order not found');
     const order = orderRes.rows[0];
 
-    // Assuming we only invoice dispatched or delivered orders
-    if (order.status === 'Created' || order.status === 'Stock Reserved') {
-      throw new Error('Order must be dispatched before invoicing');
-    }
-    
     if (order.status === 'Invoiced' || order.status === 'Paid') {
       throw new Error('Order is already invoiced');
     }
@@ -44,12 +39,13 @@ router.post('/from-order/:sales_order_id', authMiddleware(['Admin', 'Accounts'])
     // Generate Invoice Number
     const countResult = await client.query('SELECT COUNT(*) FROM invoices');
     const invNumber = `INV-${new Date().getFullYear()}-${String(parseInt(countResult.rows[0].count) + 1).padStart(4, '0')}`;
+    const userId = req.user?.id || 1;
 
     // Create Invoice
     const invoiceRes = await client.query(
       `INSERT INTO invoices (invoice_number, sales_order_id, customer_id, total_amount, created_by)
        VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-      [invNumber, sales_order_id, order.customer_id, order.total_amount, req.user.id]
+      [invNumber, sales_order_id, order.customer_id, order.total_amount, userId]
     );
 
     // Update order status

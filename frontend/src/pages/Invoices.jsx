@@ -22,7 +22,7 @@ const Invoices = () => {
       ]);
       const orderList = Array.isArray(ordersRes.data?.data) ? ordersRes.data.data : Array.isArray(ordersRes.data) ? ordersRes.data : [];
       const invoiceList = Array.isArray(invoicesRes.data?.data) ? invoicesRes.data.data : Array.isArray(invoicesRes.data) ? invoicesRes.data : [];
-      setOrders(orderList.filter(o => o.status === 'Dispatched'));
+      setOrders(orderList.filter(o => o.status !== 'Invoiced' && o.status !== 'Paid' && o.status !== 'Cancelled'));
       setInvoices(invoiceList);
     } catch (error) {
       console.error('Failed to fetch data', error);
