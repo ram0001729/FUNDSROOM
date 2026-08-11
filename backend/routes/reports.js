@@ -72,16 +72,13 @@ router.get('/', authMiddleware(['Admin', 'Sales', 'Accounts']), async (req, res)
     // Sales Trend (Last 6 months grouped by month)
     const trendQuery = `
       SELECT 
-        TO_CHAR(ch.created_at, 'Mon YYYY') as month_label,
-        DATE_TRUNC('month', ch.created_at) as month_date,
-        SUM(ci.quantity * ci.product_snapshot_price) as sales,
-        SUM(ci.quantity * (ci.product_snapshot_price - COALESCE(p.cost_price, 0))) as profit,
-        COUNT(DISTINCT ch.id) as orders
-      FROM challan_items ci
-      JOIN challans ch ON ci.challan_id = ch.id
-      LEFT JOIN products p ON ci.product_id = p.id
-      WHERE ch.status = 'Confirmed' 
-        AND ch.created_at >= DATE_TRUNC('month', CURRENT_DATE) - INTERVAL '5 months'
+        TO_CHAR(so.created_at, 'Mon YYYY') as month_label,
+        DATE_TRUNC('month', so.created_at) as month_date,
+        SUM(so.total_amount) as sales,
+        SUM(so.total_amount * 0.25) as profit,
+        COUNT(DISTINCT so.id) as orders
+      FROM sales_orders so
+      WHERE so.created_at >= DATE_TRUNC('month', CURRENT_DATE) - INTERVAL '5 months'
       GROUP BY month_label, month_date
       ORDER BY month_date ASC
     `;
