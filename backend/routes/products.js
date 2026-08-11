@@ -51,7 +51,7 @@ router.get('/', authMiddleware(), async (req, res) => {
 router.post('/', authMiddleware(['Admin', 'Warehouse']), async (req, res) => {
   try {
     const { name, sku, category, unit_price, cost_price, current_stock, min_stock, location, expiry_date, available, image_url } = req.body;
-    if (!name || !sku || unit_price === undefined) {
+    if (!name || !sku || unit_price === undefined || unit_price === '') {
       return res.status(400).json({ error: 'Name, SKU, and unit_price are required' });
     }
 
@@ -59,24 +59,37 @@ router.post('/', authMiddleware(['Admin', 'Warehouse']), async (req, res) => {
       INSERT INTO products (name, sku, category, unit_price, cost_price, current_stock, min_stock, location, expiry_date, available, image_url)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *
     `;
-    const values = [name, sku, category, unit_price, cost_price || 0, current_stock || 0, min_stock || 10, location, expiry_date || null, available !== undefined ? available : true, image_url];
+    const values = [
+      name.trim(), 
+      sku.trim(), 
+      category ? category.trim() : 'General', 
+      parseFloat(unit_price) || 0, 
+      parseFloat(cost_price) || 0, 
+      parseInt(current_stock) || 0, 
+      parseInt(min_stock) || 10, 
+      location ? location.trim() : 'Warehouse A', 
+      expiry_date && expiry_date.trim() !== '' ? expiry_date : null, 
+      available !== undefined ? available : true, 
+      image_url || null
+    ];
     const result = await db.query(query, values);
 
     // Log stock movement if initial stock > 0
-    if (current_stock > 0) {
+    if (parseInt(current_stock) > 0) {
+      const userId = req.user?.id || 1;
       await db.query(
         'INSERT INTO stock_movements (product_id, quantity_changed, movement_type, reason, created_by) VALUES ($1, $2, $3, $4, $5)',
-        [result.rows[0].id, current_stock, 'IN', 'Initial Stock', req.user.id]
+        [result.rows[0].id, parseInt(current_stock), 'IN', 'Initial Stock', userId]
       );
     }
 
     res.status(201).json(result.rows[0]);
   } catch (error) {
     if (error.code === '23505') { // unique violation
-      return res.status(400).json({ error: 'SKU already exists' });
+      return res.status(400).json({ error: 'A product with this SKU already exists' });
     }
-    console.error(error);
-    res.status(500).json({ error: 'Server error' });
+    console.error('Error creating product:', error);
+    res.status(500).json({ error: error.message || 'Failed to create product' });
   }
 });
 
@@ -90,15 +103,30 @@ router.put('/:id', authMiddleware(['Admin', 'Warehouse']), async (req, res) => {
       SET name=$1, sku=$2, category=$3, unit_price=$4, cost_price=$5, min_stock=$6, location=$7, expiry_date=$8, available=$9, image_url=$10, updated_at=CURRENT_TIMESTAMP
       WHERE id=$11 RETURNING *
     `;
-    const values = [name, sku, category, unit_price, cost_price, min_stock, location, expiry_date || null, available, image_url, req.params.id];
+    const values = [
+      name ? name.trim() : '', 
+      sku ? sku.trim() : '', 
+      category ? category.trim() : 'General', 
+      parseFloat(unit_price) || 0, 
+      parseFloat(cost_price) || 0, 
+      parseInt(min_stock) || 10, 
+      location ? location.trim() : 'Warehouse A', 
+      expiry_date && expiry_date.trim() !== '' ? expiry_date : null, 
+      available !== undefined ? available : true, 
+      image_url || null, 
+      req.params.id
+    ];
     
     const result = await db.query(query, values);
     if (result.rows.length === 0) return res.status(404).json({ error: 'Product not found' });
     
     res.json(result.rows[0]);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Server error' });
+    if (error.code === '23505') {
+      return res.status(400).json({ error: 'A product with this SKU already exists' });
+    }
+    console.error('Error updating product:', error);
+    res.status(500).json({ error: error.message || 'Failed to update product' });
   }
 });
 
