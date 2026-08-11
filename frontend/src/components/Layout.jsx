@@ -264,6 +264,23 @@ const Layout = () => {
         {/* Sidebar */}
         <aside className="w-[240px] bg-[#1B512D] text-white flex flex-col py-5 flex-shrink-0 z-20 transition-all rounded-tr-[24px] shadow-xl overflow-y-auto overflow-x-hidden">
           <nav className="flex-1 flex flex-col px-4">
+            
+            {/* User & Role Badge Card */}
+            <div className="mb-4 mx-1 p-3 bg-white/10 backdrop-blur-md rounded-2xl border border-white/15 shadow-sm flex items-center gap-3">
+              <div className="w-9 h-9 rounded-full bg-[#73E2A7] text-[#1B512D] flex items-center justify-center font-black text-sm shadow-md flex-shrink-0">
+                {user?.name ? user.name.charAt(0).toUpperCase() : (user?.username ? user.username.charAt(0).toUpperCase() : 'A')}
+              </div>
+              <div className="flex flex-col min-w-0">
+                <span className="text-[13px] font-extrabold text-white truncate leading-tight">
+                  {user?.name || (user?.username ? user.username.charAt(0).toUpperCase() + user.username.slice(1) : 'Logged User')}
+                </span>
+                <div className="mt-1 inline-flex items-center gap-1.5 px-2 py-0.5 bg-[#73E2A7]/20 border border-[#73E2A7]/30 text-[#73E2A7] text-[10px] font-black rounded-full w-max tracking-wide uppercase">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#73E2A7] animate-pulse"></span>
+                  {user?.role || 'Administrator'}
+                </div>
+              </div>
+            </div>
+
             <div className="text-[11px] uppercase text-[#73E2A7] opacity-80 mx-2 mb-2 tracking-[0.06em]">
               Main Menu
             </div>
