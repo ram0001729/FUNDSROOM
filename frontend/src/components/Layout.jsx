@@ -85,99 +85,101 @@ const Layout = () => {
   return (
     <div className="flex flex-col h-screen font-sans bg-gradient-to-br from-[#f0fdf4] to-[#e6fcf0] overflow-hidden text-black font-medium">
       
-      {/* Full-width Glassmorphism Topbar */}
-      <header className="h-[70px] bg-white/10 backdrop-blur-md border-b border-white/20 shadow-[0_4px_40px_rgba(115,226,167,0.35)] flex items-center justify-between px-6 lg:px-8 flex-shrink-0 z-30">
+      {/* Floating Mint Glassmorphism Header */}
+      <header className="py-3 px-4 lg:px-8 flex-shrink-0 z-30">
+        <div className="max-w-7xl mx-auto h-[64px] bg-gradient-to-r from-[#a7f3d0]/70 via-[#bbf7d0]/80 to-[#a7f3d0]/70 backdrop-blur-xl border border-white/80 shadow-[0_8px_32px_rgba(16,185,129,0.25)] rounded-full px-6 flex items-center justify-between transition-all">
         
-        {/* Left side: Logo & Brand */}
-        <div className="flex items-center gap-3 w-[240px]">
-          <div className="flex items-center">
-            <img src="/distribucore-logo.png" alt="DistribuCore" className="h-10 object-contain" />
-          </div>
-        </div>
-        
-        {/* Middle: Search Bar */}
-        <div className="flex-1 max-w-xl hidden md:block px-6">
-          <div className="relative group">
-            <div className="absolute inset-y-0 left-0 pl-7 flex items-center pointer-events-none">
-              <Search size={20} className="text-[#1B512D]/60 group-focus-within:text-[#1B512D] transition-colors" />
+          {/* Left side: Logo & Brand */}
+          <div className="flex items-center gap-3 w-[220px]">
+            <div className="flex items-center">
+              <img src="/distribucore-logo.png" alt="DistribuCore" className="h-9 object-contain drop-shadow-sm" />
             </div>
-            <input 
-              type="text" 
-              placeholder="Search anything..." 
-              className="w-full pl-14 pr-6 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-lg border border-white/30 rounded-full text-[14px] text-gray-800 focus:outline-none focus:bg-white/30 focus:ring-2 focus:ring-[#1B512D]/30 focus:border-white/60 transition-all placeholder-gray-500 shadow-[0_4px_16px_rgba(0,0,0,0.04)]"
-            />
           </div>
-        </div>
-
-        {/* Right side: Actions & Profile */}
-        <div className="flex items-center gap-3 md:gap-4 justify-end">
           
-          {/* Action Buttons */}
-          <div className="flex items-center gap-2">
-            <Link to="/dashboard" className="flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-white/40 hover:bg-white/80 border border-white/60 shadow-sm rounded-full text-gray-600 hover:text-[#1B512D] transition-all" title="Home">
-              <Home size={16} />
-              <span className="text-[13px] font-bold hidden lg:inline-block">Home</span>
-            </Link>
-            <div className="relative">
-              <button 
-                onClick={() => setIsLanguageOpen(!isLanguageOpen)}
-                className="flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-white/40 hover:bg-white/80 border border-white/60 shadow-sm rounded-full text-gray-600 hover:text-[#1B512D] transition-all" 
-                title="Change Language"
-              >
-                <Globe size={16} />
-                <span className="text-[13px] font-bold hidden sm:inline-block">{language}</span>
-              </button>
+          {/* Middle: Search Bar */}
+          <div className="flex-1 max-w-lg hidden md:block px-4">
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+                <Search size={18} className="text-[#1B512D]/70 group-focus-within:text-[#1B512D] transition-colors" />
+              </div>
+              <input 
+                type="text" 
+                placeholder="Search anything..." 
+                className="w-full pl-12 pr-5 py-2.5 bg-white/50 hover:bg-white/70 backdrop-blur-lg border border-white/70 rounded-full text-[13px] text-gray-800 focus:outline-none focus:bg-white/90 focus:ring-2 focus:ring-[#1B512D]/30 focus:border-white transition-all placeholder-gray-500 shadow-inner"
+              />
+            </div>
+          </div>
+
+          {/* Right side: Actions & Profile */}
+          <div className="flex items-center gap-2 md:gap-3 justify-end">
+            
+            {/* Action Buttons */}
+            <div className="flex items-center gap-2">
+              <Link to="/dashboard" className="flex items-center gap-1.5 px-4 py-2 bg-white/60 hover:bg-white/90 border border-white/80 shadow-sm rounded-full text-gray-700 hover:text-[#1B512D] transition-all text-[13px] font-bold" title="Home">
+                <Home size={15} />
+                <span className="hidden lg:inline-block">Home</span>
+              </Link>
               
-              {isLanguageOpen && (
-                <div className="absolute right-0 mt-2 w-32 bg-white rounded-xl shadow-lg border border-gray-100 py-1 z-50 overflow-hidden">
-                  {languages.map((lang) => (
-                    <button
-                      key={lang.code}
-                      onClick={() => {
-                        setLanguage(lang.code);
-                        setIsLanguageOpen(false);
-                      }}
-                      className={`w-full text-left px-4 py-2 text-sm transition-colors ${
-                        language === lang.code 
-                          ? 'bg-green-50 text-green-700 font-semibold' 
-                          : 'text-gray-700 hover:bg-gray-50'
-                      }`}
-                    >
-                      {lang.name}
-                    </button>
-                  ))}
+              <div className="relative">
+                <button 
+                  onClick={() => setIsLanguageOpen(!isLanguageOpen)}
+                  className="flex items-center gap-1.5 px-4 py-2 bg-white/60 hover:bg-white/90 border border-white/80 shadow-sm rounded-full text-gray-700 hover:text-[#1B512D] transition-all text-[13px] font-bold" 
+                  title="Change Language"
+                >
+                  <Globe size={15} />
+                  <span className="hidden sm:inline-block">{language}</span>
+                </button>
+                
+                {isLanguageOpen && (
+                  <div className="absolute right-0 mt-2 w-32 bg-white/90 backdrop-blur-md rounded-2xl shadow-xl border border-white/80 py-1 z-50 overflow-hidden">
+                    {languages.map((lang) => (
+                      <button
+                        key={lang.code}
+                        onClick={() => {
+                          setLanguage(lang.code);
+                          setIsLanguageOpen(false);
+                        }}
+                        className={`w-full text-left px-4 py-2 text-xs font-semibold transition-colors ${
+                          language === lang.code 
+                            ? 'bg-emerald-100 text-emerald-800 font-bold' 
+                            : 'text-gray-700 hover:bg-emerald-50'
+                        }`}
+                      >
+                        {lang.name}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <button className="relative p-2 text-gray-700 hover:text-[#1B512D] hover:bg-white/80 rounded-full transition-all" title="Notifications">
+              <Bell size={18} />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+            </button>
+            
+            <div className="h-6 w-px bg-emerald-700/20 mx-1 hidden sm:block"></div>
+
+            <div className="relative">
+              <div 
+                className="flex items-center gap-2.5 cursor-pointer p-1 pr-3 rounded-full hover:bg-white/60 transition-colors border border-transparent hover:border-white/80"
+                onClick={() => setIsProfileOpen(!isProfileOpen)}
+              >
+                <div className="w-8 h-8 rounded-full bg-[#1B512D] text-white flex items-center justify-center font-bold text-xs shadow-md">
+                  {user?.name ? user.name.charAt(0).toUpperCase() : (user?.username ? user.username.charAt(0).toUpperCase() : 'A')}
                 </div>
-              )}
-            </div>
-          </div>
-
-          <button className="relative p-2 text-gray-500 hover:text-[#1B512D] hover:bg-white/60 rounded-full transition-all ml-1" title="Notifications">
-            <Bell size={20} />
-            <span className="absolute top-1.5 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-          </button>
-          
-          <div className="h-8 w-px bg-gray-200/60 mx-1 hidden sm:block"></div>
-
-          <div className="relative">
-            <div 
-              className="flex items-center gap-3 cursor-pointer p-1.5 pr-4 rounded-full hover:bg-white/50 transition-colors border border-transparent hover:border-white/60"
-              onClick={() => setIsProfileOpen(!isProfileOpen)}
-            >
-              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#1B512D] to-[#2a7a44] text-white flex items-center justify-center font-bold text-sm shadow-md">
-                {user?.name ? user.name.charAt(0).toUpperCase() : (user?.username ? user.username.charAt(0).toUpperCase() : 'A')}
+                <div className="hidden sm:flex flex-col">
+                  <span className="text-[12px] font-bold text-gray-800 leading-tight">
+                    {user?.name || (user?.username ? user.username.charAt(0).toUpperCase() + user.username.slice(1) : 'Admin')}
+                  </span>
+                  <span className="text-[10px] text-[#1B512D] font-semibold">{user?.role || 'Administrator'}</span>
+                </div>
               </div>
-              <div className="hidden sm:flex flex-col">
-                <span className="text-[13px] font-bold text-gray-800 leading-tight">
-                  {user?.name || (user?.username ? user.username.charAt(0).toUpperCase() + user.username.slice(1) : 'Admin')}
-                </span>
-                <span className="text-[10px] text-gray-500 font-medium">{user?.role || 'Administrator'}</span>
-              </div>
-            </div>
 
-            {/* Profile Dropdown */}
-            {isProfileOpen && (
-              <>
-                <div className="fixed inset-0 z-40" onClick={() => setIsProfileOpen(false)}></div>
+              {/* Profile Dropdown */}
+              {isProfileOpen && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setIsProfileOpen(false)}></div>
                 <div className="absolute right-0 mt-2 w-64 bg-white rounded-[16px] shadow-lg border border-[#e5e7eb] z-50 overflow-hidden animate-fade-in">
                   <div className="p-4 border-b border-[#e5e7eb] bg-[#f9fafb]">
                     <p className="font-bold text-[#111827] text-[15px]">{user?.name || user?.username}</p>
@@ -199,6 +201,7 @@ const Layout = () => {
               </>
             )}
           </div>
+        </div>
         </div>
       </header>
 
