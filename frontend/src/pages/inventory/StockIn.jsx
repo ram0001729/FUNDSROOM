@@ -17,11 +17,12 @@ const StockIn = () => {
         api.get('/products/movements/log'),
         api.get('/inventory/stats')
       ]);
-      // Filter for IN only
-      setMovements(moveRes.data.filter(m => m.movement_type === 'IN'));
-      setStats(statsRes.data.data);
+      const list = Array.isArray(moveRes.data) ? moveRes.data : Array.isArray(moveRes.data?.data) ? moveRes.data.data : [];
+      setMovements(list.filter(m => m.movement_type === 'IN'));
+      setStats(statsRes.data?.data || null);
     } catch (error) {
       console.error('Error fetching stock in data', error);
+      setMovements([]);
     } finally {
       setLoading(false);
     }

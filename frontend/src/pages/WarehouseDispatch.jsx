@@ -13,10 +13,11 @@ const WarehouseDispatch = () => {
   const fetchOrders = async () => {
     try {
       const res = await api.get('/sales-orders');
-      // Only show orders that have stock reserved or are already dispatched
-      setOrders(res.data.data.filter(o => o.status === 'Stock Reserved' || o.status === 'Dispatched' || o.status === 'Invoiced' || o.status === 'Paid'));
+      const list = Array.isArray(res.data?.data) ? res.data.data : Array.isArray(res.data) ? res.data : [];
+      setOrders(list.filter(o => o.status === 'Stock Reserved' || o.status === 'Dispatched' || o.status === 'Invoiced' || o.status === 'Paid' || o.status === 'Confirmed' || o.status === 'Draft'));
     } catch (error) {
       console.error('Failed to fetch orders', error);
+      setOrders([]);
     } finally {
       setLoading(false);
     }
