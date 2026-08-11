@@ -93,8 +93,8 @@ const Landing = () => {
       </section>
 
       {/* 3. SHOP WITH CATEGORIES */}
-      <section id="features" className="w-full bg-[#cbd1d4] flex flex-col items-center py-20 pb-28 border-t border-gray-300/30">
-        <h2 className="text-[#1a2c3a] text-[38px] font-black mb-16 tracking-tight">Core Modules</h2>
+      <section id="features" className="w-full bg-gradient-to-br from-[#e0f2fe] via-[#dbeafe] to-[#e0f2fe] flex flex-col items-center py-20 pb-28 border-t border-sky-200/50">
+        <h2 className="text-[#0369a1] text-[38px] font-black mb-16 tracking-tight">Core Modules</h2>
         
         <div className="flex flex-wrap justify-center gap-6 px-4 max-w-7xl mx-auto">
           {[
@@ -106,12 +106,12 @@ const Landing = () => {
           ].map((cat, idx) => (
             <div 
               key={idx} 
-              className="w-[220px] h-[270px] bg-[#bbc2c6] rounded-[24px] flex flex-col items-center p-6 cursor-pointer transition-all duration-300 hover:bg-white hover:-translate-y-2 hover:shadow-2xl hover:outline hover:outline-[3px] hover:outline-[#1a5b5e] hover:outline-offset-[6px] group"
+              className="w-[220px] h-[270px] bg-[#bae6fd]/70 backdrop-blur-md rounded-[24px] border border-sky-200/60 flex flex-col items-center p-6 cursor-pointer transition-all duration-300 hover:bg-white hover:-translate-y-2 hover:shadow-2xl hover:outline hover:outline-[3px] hover:outline-[#0284c7] hover:outline-offset-[6px] group"
             >
               <div className="flex-1 w-full flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-105">
                  <img src={cat.img} alt={cat.name} className="w-full h-full object-contain" />
               </div>
-              <h3 className="text-[#1a2c3a] font-bold text-[16px] text-center leading-tight">
+              <h3 className="text-[#0c4a6e] font-bold text-[16px] text-center leading-tight">
                 {cat.name}
               </h3>
             </div>
@@ -161,30 +161,30 @@ const Landing = () => {
       </section>
 
       {/* 5. HOW IT WORKS (Steps) */}
-      <section className="w-full bg-[#cbd0d2] flex justify-center py-28 pb-32">
+      <section className="w-full bg-gradient-to-br from-[#e0f2fe] via-[#bae6fd]/50 to-[#e0f2fe] flex justify-center py-28 pb-32 border-y border-sky-200/50">
         <div className="flex flex-col md:flex-row justify-center gap-10 px-8 max-w-6xl w-full">
           
-          <div className="flex-1 bg-[#b9bec1] rounded-2xl p-10 flex flex-col items-center text-center transition-all duration-300 hover:bg-white hover:shadow-xl hover:-translate-y-2 hover:ring-2 hover:ring-teal-200/50 cursor-pointer">
+          <div className="flex-1 bg-[#bae6fd]/70 backdrop-blur-md rounded-2xl border border-sky-200/70 p-10 flex flex-col items-center text-center transition-all duration-300 hover:bg-white hover:shadow-xl hover:-translate-y-2 hover:ring-2 hover:ring-sky-400/50 cursor-pointer">
             <div className="h-44 w-44 flex items-center justify-center mb-6">
               <img src="https://res.cloudinary.com/dp5rqtjnk/image/upload/v1766664693/search_b3egwz.svg" alt="Search nearby services" className="w-full h-full object-contain" />
             </div>
-            <h4 className="text-[#103a27] font-black text-[22px] mb-2 tracking-tight">Record Sales</h4>
+            <h4 className="text-[#0369a1] font-black text-[22px] mb-2 tracking-tight">Record Sales</h4>
             <p className="text-gray-700 font-medium text-[16px]">Create sales challans and track orders</p>
           </div>
 
-          <div className="flex-1 bg-[#b9bec1] rounded-2xl p-10 flex flex-col items-center text-center transition-all duration-300 hover:bg-white hover:shadow-xl hover:-translate-y-2 hover:ring-2 hover:ring-teal-200/50 cursor-pointer">
+          <div className="flex-1 bg-[#bae6fd]/70 backdrop-blur-md rounded-2xl border border-sky-200/70 p-10 flex flex-col items-center text-center transition-all duration-300 hover:bg-white hover:shadow-xl hover:-translate-y-2 hover:ring-2 hover:ring-sky-400/50 cursor-pointer">
             <div className="h-44 w-44 flex items-center justify-center mb-6">
               <img src="https://res.cloudinary.com/dp5rqtjnk/image/upload/v1766664524/choose_tlzjzs.svg" alt="Choose provider" className="w-full h-full object-contain" />
             </div>
-            <h4 className="text-[#102347] font-black text-[22px] mb-2 tracking-tight">Manage Stock</h4>
+            <h4 className="text-[#0369a1] font-black text-[22px] mb-2 tracking-tight">Manage Stock</h4>
             <p className="text-gray-700 font-medium text-[16px]">Monitor real-time inventory</p>
           </div>
 
-          <div className="flex-1 bg-[#b9bec1] rounded-2xl p-10 flex flex-col items-center text-center transition-all duration-300 hover:bg-white hover:shadow-xl hover:-translate-y-2 hover:ring-2 hover:ring-teal-200/50 cursor-pointer">
+          <div className="flex-1 bg-[#bae6fd]/70 backdrop-blur-md rounded-2xl border border-sky-200/70 p-10 flex flex-col items-center text-center transition-all duration-300 hover:bg-white hover:shadow-xl hover:-translate-y-2 hover:ring-2 hover:ring-sky-400/50 cursor-pointer">
             <div className="h-44 w-44 flex items-center justify-center mb-6">
               <img src="https://res.cloudinary.com/dp5rqtjnk/image/upload/v1766664550/contact_u8qd6m.svg" alt="Connect instantly" className="w-full h-full object-contain" />
             </div>
-            <h4 className="text-[#102347] font-black text-[22px] mb-2 tracking-tight">Generate Invoices</h4>
+            <h4 className="text-[#0369a1] font-black text-[22px] mb-2 tracking-tight">Generate Invoices</h4>
             <p className="text-gray-700 font-medium text-[16px]">Auto-generate PDF summaries for accounts</p>
           </div>
 
