@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import useAuthStore from '../store/authStore';
+import api from '../api/axios';
 import Chatbot from './Chatbot';
 import { Bot, BotMessageSquare, LayoutDashboard, Package, ArrowRightLeft, Receipt, BarChart2, Briefcase, Settings, Search, Bell, Home, Globe, ChevronDown, ChevronUp, Users, ShoppingCart, Activity, FileText, CreditCard, Truck } from 'lucide-react';
 const Layout = () => {
@@ -12,6 +13,34 @@ const Layout = () => {
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
   const [language, setLanguage] = useState('EN');
   
+  const [counts, setCounts] = useState({
+    pendingOrders: 0,
+    lowStock: 0,
+    overdueInvoices: 0,
+    pendingDispatches: 0,
+    newLeads: 0
+  });
+
+  useEffect(() => {
+    fetchSidebarCounts();
+  }, [location.pathname]);
+
+  const fetchSidebarCounts = async () => {
+    try {
+      const res = await api.get('/reports');
+      const data = res.data;
+      setCounts({
+        pendingOrders: data.sales_dashboard_stats?.pending_orders || 0,
+        lowStock: data.predictive_alerts?.length || 0,
+        overdueInvoices: data.accounts_stats?.overdue_invoices || 0,
+        pendingDispatches: data.warehouse_dashboard_stats?.pending_dispatches || 0,
+        newLeads: data.sales_dashboard_stats?.new_leads || 0
+      });
+    } catch (err) {
+      console.error('Failed to fetch sidebar counts', err);
+    }
+  };
+
   const languages = [
     { code: 'EN', name: 'English' },
     { code: 'HI', name: 'Hindi' },
@@ -38,36 +67,35 @@ const Layout = () => {
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard, roles: ['Admin', 'Sales', 'Accounts', 'Warehouse'] },
     
     // Customers
-    { name: 'Customers', path: '/customers', icon: Users, roles: ['Admin', 'Sales'] },
+    { name: 'Customers', path: '/customers', icon: Users, roles: ['Admin', 'Sales'], badge: counts.newLeads, badgeColor: 'bg-blue-500' },
     
     // Products & Inventory
-    { name: 'Products', path: '/products', icon: Package, roles: ['Admin', 'Warehouse'] },
-    { name: 'Inventory', path: '/inventory', icon: Package, roles: ['Admin', 'Warehouse'], children: [
+    { name: 'Products', path: '/products', icon: Package, roles: ['Admin', 'Warehouse'], badge: counts.lowStock, badgeColor: 'bg-red-500' },
+    { name: 'Inventory', path: '/inventory/stock', icon: Package, roles: ['Admin', 'Warehouse'], badge: counts.lowStock, badgeColor: 'bg-red-500', children: [
       { name: 'Stock Overview', path: '/inventory/stock', roles: ['Admin', 'Warehouse'] },
       { name: 'Stock In', path: '/inventory/in', roles: ['Warehouse'] },
       { name: 'Stock Out', path: '/inventory/out', roles: ['Warehouse'] },
       { name: 'Stock Movements', path: '/stock-log', roles: ['Warehouse'] },
-      { name: 'Low Stock Alerts', path: '/inventory/low-stock', roles: ['Warehouse'] }
+      { name: 'Low Stock Alerts', path: '/inventory/low-stock', roles: ['Warehouse'], badge: counts.lowStock, badgeColor: 'bg-red-500' }
     ]},
-    { name: 'Warehouses', path: '/warehouses', icon: Package, roles: ['Warehouse'] },
+    { name: 'Warehouses', path: '/warehouses', icon: Package, roles: ['Warehouse'], badge: counts.pendingDispatches, badgeColor: 'bg-amber-500' },
     
     // Purchases
-    { name: 'Purchases', path: '/purchases', icon: ShoppingCart, roles: ['Admin'] },
+    { name: 'Purchases', path: '/purchases/orders', icon: ShoppingCart, roles: ['Admin'] },
     
     // Sales Operations
-    { name: 'Sales', path: '/sales/orders', icon: ShoppingCart, roles: ['Admin', 'Sales'] },
+    { name: 'Sales', path: '/sales/orders', icon: ShoppingCart, roles: ['Admin', 'Sales'], badge: counts.pendingOrders, badgeColor: 'bg-amber-500' },
     { name: 'Challans', path: '/challans', icon: ShoppingCart, roles: ['Admin'] },
     { name: 'Sales Challans', path: '/challans', icon: ShoppingCart, roles: ['Sales'] },
     { name: 'Online Sales', path: '/sales/online', icon: Globe, roles: ['Sales', 'Accounts'] },
     { name: 'Offline Sales', path: '/sales/offline', icon: ShoppingCart, roles: ['Sales', 'Accounts'] },
-    { name: 'CRM / Follow-ups', path: '/crm/leads', icon: Users, roles: ['Sales'] },
+    { name: 'CRM / Follow-ups', path: '/crm/leads', icon: Users, roles: ['Sales'], badge: counts.newLeads, badgeColor: 'bg-[#73E2A7] text-[#1B512D]' },
     
     // Financial & Accounting
-    { name: 'Sales Revenue', path: '/billing', icon: CreditCard, roles: ['Accounts'] },
-    { name: 'Invoices', path: '/billing', icon: FileText, roles: ['Admin', 'Accounts'] },
+    { name: 'Invoices', path: '/billing', icon: FileText, roles: ['Admin', 'Accounts'], badge: counts.overdueInvoices, badgeColor: 'bg-rose-500' },
     { name: 'Payments', path: '/payments/history', icon: CreditCard, roles: ['Accounts'] },
     { name: 'Accounts', path: '/billing', icon: Briefcase, roles: ['Admin'] },
-    { name: 'Outstanding', path: '/payments/outstanding', icon: FileText, roles: ['Accounts'] },
+    { name: 'Outstanding', path: '/payments/outstanding', icon: FileText, roles: ['Accounts'], badge: counts.overdueInvoices, badgeColor: 'bg-rose-500' },
     
     // Reports
     { name: 'Reports', path: '/reports', icon: BarChart2, roles: ['Admin', 'Accounts'] },
@@ -241,19 +269,33 @@ const Layout = () => {
                         <item.icon size={18} className={`mr-3 ${isActive ? 'text-[#73E2A7]' : 'text-[#73E2A7]/70'}`} />
                         {item.name}
                       </div>
-                      {isOpen ? <ChevronUp size={16} className="opacity-70" /> : <ChevronDown size={16} className="opacity-70" />}
+                      <div className="flex items-center gap-1.5">
+                        {item.badge > 0 && (
+                          <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${item.badgeColor || 'bg-red-500 text-white'} shadow-sm`}>
+                            {item.badge}
+                          </span>
+                        )}
+                        {isOpen ? <ChevronUp size={16} className="opacity-70" /> : <ChevronDown size={16} className="opacity-70" />}
+                      </div>
                     </button>
                   ) : (
                     <Link
                       to={item.path}
-                      className={`flex items-center px-3 py-[10px] mx-1 text-[14px] rounded-xl transition-colors ${
+                      className={`flex items-center justify-between px-3 py-[10px] mx-1 text-[14px] rounded-xl transition-colors ${
                         isActive 
                           ? 'bg-[#73E2A7] text-[#1B512D] font-bold shadow-sm' 
                           : 'text-white hover:bg-white/10'
                       }`}
                     >
-                      <item.icon size={18} className={`mr-3 ${isActive ? 'text-[#1B512D]' : 'text-[#73E2A7]'}`} />
-                      {item.name}
+                      <div className="flex items-center">
+                        <item.icon size={18} className={`mr-3 ${isActive ? 'text-[#1B512D]' : 'text-[#73E2A7]'}`} />
+                        {item.name}
+                      </div>
+                      {item.badge > 0 && (
+                        <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${isActive ? 'bg-[#1B512D] text-[#73E2A7]' : (item.badgeColor || 'bg-red-500 text-white')} shadow-sm`}>
+                          {item.badge}
+                        </span>
+                      )}
                     </Link>
                   )}
                   
