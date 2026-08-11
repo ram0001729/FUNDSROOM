@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api/axios';
-import { FileText, CheckCircle } from 'lucide-react';
+import { FileText, CheckCircle, Download } from 'lucide-react';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 const Invoices = () => {
   const [orders, setOrders] = useState([]);
@@ -18,11 +20,14 @@ const Invoices = () => {
         api.get('/sales-orders'),
         api.get('/invoices')
       ]);
-      // Only show dispatched orders that need invoicing
-      setOrders(ordersRes.data.data.filter(o => o.status === 'Dispatched'));
-      setInvoices(invoicesRes.data.data);
+      const orderList = Array.isArray(ordersRes.data?.data) ? ordersRes.data.data : Array.isArray(ordersRes.data) ? ordersRes.data : [];
+      const invoiceList = Array.isArray(invoicesRes.data?.data) ? invoicesRes.data.data : Array.isArray(invoicesRes.data) ? invoicesRes.data : [];
+      setOrders(orderList.filter(o => o.status === 'Dispatched'));
+      setInvoices(invoiceList);
     } catch (error) {
       console.error('Failed to fetch data', error);
+      setOrders([]);
+      setInvoices([]);
     } finally {
       setLoading(false);
     }
@@ -35,6 +40,70 @@ const Invoices = () => {
       fetchData();
     } catch (error) {
       alert(error.response?.data?.message || 'Error generating invoice');
+    }
+  };
+
+  const downloadInvoicePDF = (inv) => {
+    try {
+      const doc = new jsPDF();
+      const pageW = doc.internal.pageSize.getWidth();
+
+      // Header
+      doc.setFillColor(27, 81, 45);
+      doc.rect(0, 0, pageW, 36, 'F');
+      
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(22);
+      doc.setFont('helvetica', 'bold');
+      doc.text('DistribuCore', 14, 18);
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.text('TAX INVOICE / RECEIPT', 14, 26);
+
+      // Invoice Details
+      doc.setTextColor(50, 50, 50);
+      doc.setFontSize(10);
+      doc.text(`Invoice #: ${inv.invoice_number}`, pageW - 14, 18, { align: 'right' });
+      doc.text(`Date: ${inv.created_at ? new Date(inv.created_at).toLocaleDateString() : 'N/A'}`, pageW - 14, 26, { align: 'right' });
+
+      // Customer Info
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Bill To:', 14, 48);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      doc.text(inv.customer_name || 'Walk-in Customer', 14, 55);
+
+      // Table
+      const tableColumn = ["Invoice Number", "Customer", "Status", "Total Amount (Rs)", "Amount Paid (Rs)", "Balance Due (Rs)"];
+      const balance = parseFloat(inv.total_amount || 0) - parseFloat(inv.amount_paid || 0);
+      const tableRows = [[
+        inv.invoice_number,
+        inv.customer_name || 'Walk-in Customer',
+        inv.status || 'Generated',
+        parseFloat(inv.total_amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 }),
+        parseFloat(inv.amount_paid || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 }),
+        (balance > 0 ? balance : 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })
+      ]];
+
+      const options = {
+        startY: 65,
+        head: [tableColumn],
+        body: tableRows,
+        theme: 'grid',
+        headStyles: { fillColor: [27, 81, 45], textColor: [255, 255, 255], fontStyle: 'bold' }
+      };
+
+      if (typeof doc.autoTable === 'function') {
+        doc.autoTable(options);
+      } else {
+        autoTable(doc, options);
+      }
+
+      doc.save(`Invoice_${inv.invoice_number}.pdf`);
+    } catch (err) {
+      console.error('Failed to download invoice PDF:', err);
+      alert('Failed to generate PDF. Please try again.');
     }
   };
 
@@ -112,6 +181,7 @@ const Invoices = () => {
                   <th className="p-4 font-medium">Amount Paid</th>
                   <th className="p-4 font-medium">Status</th>
                   <th className="p-4 font-medium">Date</th>
+                  <th className="p-4 font-medium text-right">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -131,11 +201,19 @@ const Invoices = () => {
                       </span>
                     </td>
                     <td className="p-4 text-gray-500 text-sm">{new Date(inv.created_at).toLocaleDateString()}</td>
+                    <td className="p-4 text-right">
+                      <button 
+                        onClick={() => downloadInvoicePDF(inv)}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#1B512D] hover:bg-[#154124] text-white text-xs font-bold rounded-lg shadow-sm transition-all"
+                      >
+                        <Download size={13} /> PDF
+                      </button>
+                    </td>
                   </tr>
                 ))}
                 {invoices.length === 0 && (
                   <tr>
-                    <td colSpan="6" className="p-8 text-center text-gray-500">No invoices generated yet.</td>
+                    <td colSpan="7" className="p-8 text-center text-gray-500">No invoices generated yet.</td>
                   </tr>
                 )}
               </tbody>

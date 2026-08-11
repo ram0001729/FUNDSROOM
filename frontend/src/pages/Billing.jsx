@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import api from '../api/axios';
 import { jsPDF } from 'jspdf';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 
 const Billing = () => {
   const [period, setPeriod] = useState('month'); // 'today', 'month', '6months'
@@ -16,58 +16,75 @@ const Billing = () => {
     try {
       setLoading(true);
       const res = await api.get(`/challans/billing/summary?period=${period}`);
-      setData(res.data);
+      setData(res.data || { sales: [], stats: {} });
     } catch (error) {
       console.error('Failed to fetch billing data', error);
+      setData({ sales: [], stats: {} });
     } finally {
       setLoading(false);
     }
   };
 
   const handleDownloadPDF = () => {
-    if (!data.sales || data.sales.length === 0) {
-      alert('No sales data to export.');
-      return;
+    try {
+      const salesList = Array.isArray(data.sales) ? data.sales : [];
+      if (salesList.length === 0) {
+        alert('No sales data available to export for this period.');
+        return;
+      }
+      
+      const doc = new jsPDF();
+      
+      // Header
+      doc.setFontSize(18);
+      doc.setTextColor(27, 81, 45);
+      doc.setFont('helvetica', 'bold');
+      doc.text(`DistribuCore Billing & Invoices - ${period.toUpperCase()}`, 14, 22);
+      
+      // KPI Summary
+      doc.setFontSize(10);
+      doc.setTextColor(60, 60, 60);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`Total Sales: Rs ${parseFloat(data.stats?.total_sales || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}`, 14, 32);
+      doc.text(`Total Profit: Rs ${parseFloat(data.stats?.total_profit || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}`, 14, 38);
+      doc.text(`Total Invoices: ${data.stats?.total_invoices || 0}`, 14, 44);
+      doc.text(`Units Sold: ${data.stats?.total_qty || 0}`, 14, 50);
+
+      const tableColumn = ["Date", "Product", "Category", "Qty", "Unit (Rs)", "Total (Rs)", "Customer"];
+      const tableRows = [];
+
+      salesList.forEach(sale => {
+        const saleData = [
+          sale.created_at ? new Date(sale.created_at).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : '-',
+          sale.product_name || '-',
+          sale.category || '-',
+          sale.quantity || 0,
+          parseFloat(sale.unit_price || 0).toFixed(2),
+          parseFloat(sale.total_price || 0).toFixed(2),
+          sale.customer_name || 'Walk-in'
+        ];
+        tableRows.push(saleData);
+      });
+
+      const options = {
+        head: [tableColumn],
+        body: tableRows,
+        startY: 56,
+        theme: 'grid',
+        headStyles: { fillColor: [27, 81, 45], textColor: [255, 255, 255], fontStyle: 'bold' }
+      };
+
+      if (typeof doc.autoTable === 'function') {
+        doc.autoTable(options);
+      } else {
+        autoTable(doc, options);
+      }
+
+      doc.save(`DistribuCore_Billing_${period}_${new Date().toISOString().slice(0,10)}.pdf`);
+    } catch (err) {
+      console.error('Failed to generate PDF:', err);
+      alert('Error generating PDF report. Please try again.');
     }
-    
-    const doc = new jsPDF();
-    
-    // Header
-    doc.setFontSize(18);
-    doc.text(`DistribuCore Billing & Invoices - ${period.toUpperCase()}`, 14, 22);
-    
-    // KPI Summary
-    doc.setFontSize(11);
-    doc.text(`Total Sales: Rs ${parseFloat(data.stats.total_sales || 0).toFixed(2)}`, 14, 32);
-    doc.text(`Total Profit: Rs ${parseFloat(data.stats.total_profit || 0).toFixed(2)}`, 14, 38);
-    doc.text(`Total Invoices: ${data.stats.total_invoices || 0}`, 14, 44);
-    doc.text(`Units Sold: ${data.stats.total_qty || 0}`, 14, 50);
-
-    const tableColumn = ["Date", "Product", "Category", "Qty", "Unit (Rs)", "Total (Rs)", "Customer"];
-    const tableRows = [];
-
-    data.sales.forEach(sale => {
-      const saleData = [
-        new Date(sale.created_at).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }),
-        sale.product_name,
-        sale.category || '-',
-        sale.quantity,
-        parseFloat(sale.unit_price).toFixed(2),
-        parseFloat(sale.total_price).toFixed(2),
-        sale.customer_name || '-'
-      ];
-      tableRows.push(saleData);
-    });
-
-    doc.autoTable({
-      head: [tableColumn],
-      body: tableRows,
-      startY: 56,
-      theme: 'grid',
-      headStyles: { fillColor: [27, 81, 45] } // DistribuCore dark green: #1B512D
-    });
-
-    doc.save(`DistribuCore_Billing_${period}_${new Date().toISOString().slice(0,10)}.pdf`);
   };
 
   const { stats, sales } = data;
