@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api/axios';
-import { FilePlus, Eye, CheckCircle, XCircle, Download } from 'lucide-react';
+import { FilePlus, Eye, CheckCircle, XCircle, Download, X, Package, User, Calendar, Hash } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 
@@ -13,6 +13,11 @@ const Challans = () => {
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+
+  // View Modal State
+  const [viewModalOpen, setViewModalOpen] = useState(false);
+  const [viewChallan, setViewChallan] = useState(null);
+  const [viewLoading, setViewLoading] = useState(false);
   
   const [formData, setFormData] = useState({
     customer_id: '',
@@ -115,6 +120,20 @@ const Challans = () => {
       case 'Confirmed': return 'bg-emerald-100 text-emerald-800';
       case 'Cancelled': return 'bg-red-100 text-red-800';
       default: return 'bg-amber-100 text-amber-800';
+    }
+  };
+
+  const openViewModal = async (ch) => {
+    setViewModalOpen(true);
+    setViewLoading(true);
+    try {
+      const res = await api.get(`/challans/${ch.id}`);
+      setViewChallan(res.data);
+    } catch (error) {
+      console.error('Failed to fetch challan details:', error);
+      setViewChallan(ch);
+    } finally {
+      setViewLoading(false);
     }
   };
 
@@ -327,7 +346,7 @@ const Challans = () => {
                             </button>
                           </>
                         )}
-                        <button title="View" className="p-1.5 text-gray-500 hover:bg-gray-100 rounded">
+                        <button onClick={() => openViewModal(ch)} title="View Challan" className="p-1.5 text-blue-500 hover:bg-blue-50 rounded">
                           <Eye size={18} />
                         </button>
                         <button onClick={() => generatePDF(ch)} title="Download PDF Invoice" className="p-1.5 text-[#1B512D] hover:bg-green-50 rounded">
@@ -442,6 +461,104 @@ const Challans = () => {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* View Challan Modal */}
+      {viewModalOpen && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            {/* Modal Header */}
+            <div className="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex justify-between items-center rounded-t-2xl">
+              <div>
+                <h2 className="text-xl font-bold text-gray-800">Challan Details</h2>
+                {viewChallan && <p className="text-sm text-[#1B512D] font-semibold">{viewChallan.challan_number}</p>}
+              </div>
+              <button onClick={() => { setViewModalOpen(false); setViewChallan(null); }} className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition">
+                <X size={20} />
+              </button>
+            </div>
+
+            {viewLoading ? (
+              <div className="p-12 text-center text-gray-400">
+                <div className="animate-spin w-8 h-8 border-4 border-[#1B512D] border-t-transparent rounded-full mx-auto mb-3"></div>
+                Loading challan details...
+              </div>
+            ) : viewChallan ? (
+              <div className="p-6 space-y-6">
+
+                {/* Info Cards */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  <div className="bg-gray-50 rounded-xl p-3">
+                    <div className="flex items-center gap-1.5 text-[11px] text-gray-400 font-semibold uppercase mb-1"><Hash size={11}/> Challan No</div>
+                    <div className="text-sm font-bold text-[#1B512D]">{viewChallan.challan_number}</div>
+                  </div>
+                  <div className="bg-gray-50 rounded-xl p-3">
+                    <div className="flex items-center gap-1.5 text-[11px] text-gray-400 font-semibold uppercase mb-1"><User size={11}/> Customer</div>
+                    <div className="text-sm font-bold text-gray-800">{viewChallan.customer_name || 'Walk-in'}</div>
+                  </div>
+                  <div className="bg-gray-50 rounded-xl p-3">
+                    <div className="flex items-center gap-1.5 text-[11px] text-gray-400 font-semibold uppercase mb-1"><Calendar size={11}/> Date</div>
+                    <div className="text-sm font-bold text-gray-800">{new Date(viewChallan.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</div>
+                  </div>
+                  <div className="bg-gray-50 rounded-xl p-3">
+                    <div className="flex items-center gap-1.5 text-[11px] text-gray-400 font-semibold uppercase mb-1">Status</div>
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold ${getStatusColor(viewChallan.status)}`}>{viewChallan.status}</span>
+                  </div>
+                </div>
+
+                {/* Items Table */}
+                <div>
+                  <div className="flex items-center gap-2 mb-3">
+                    <Package size={16} className="text-[#1B512D]" />
+                    <h3 className="font-semibold text-gray-800">Items</h3>
+                  </div>
+                  <div className="rounded-xl border border-gray-100 overflow-hidden">
+                    <table className="w-full text-left text-sm">
+                      <thead>
+                        <tr className="bg-[#1B512D] text-white">
+                          <th className="px-4 py-3 font-semibold">#</th>
+                          <th className="px-4 py-3 font-semibold">Product</th>
+                          <th className="px-4 py-3 font-semibold">SKU</th>
+                          <th className="px-4 py-3 font-semibold text-right">Qty</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {viewChallan.items && viewChallan.items.length > 0 ? (
+                          viewChallan.items.map((item, idx) => (
+                            <tr key={idx} className={`border-t border-gray-50 ${idx % 2 === 0 ? 'bg-white' : 'bg-green-50/30'}`}>
+                              <td className="px-4 py-3 text-gray-400">{idx + 1}</td>
+                              <td className="px-4 py-3 font-medium text-gray-800">{item.product_name}</td>
+                              <td className="px-4 py-3 text-gray-500">{item.sku || '-'}</td>
+                              <td className="px-4 py-3 text-right font-bold text-[#1B512D]">{item.quantity}</td>
+                            </tr>
+                          ))
+                        ) : (
+                          <tr>
+                            <td colSpan="4" className="px-4 py-6 text-center text-gray-400">No items found</td>
+                          </tr>
+                        )}
+                      </tbody>
+                      <tfoot>
+                        <tr className="bg-gray-50 border-t-2 border-gray-200">
+                          <td colSpan="3" className="px-4 py-3 font-bold text-gray-700 text-right">Total Quantity:</td>
+                          <td className="px-4 py-3 text-right font-bold text-[#1B512D] text-base">{viewChallan.total_quantity || (viewChallan.items || []).reduce((s, i) => s + parseInt(i.quantity || 0), 0)}</td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="flex justify-end gap-3 pt-2 border-t border-gray-100">
+                  <button onClick={() => { setViewModalOpen(false); setViewChallan(null); }} className="px-5 py-2.5 rounded-xl font-semibold text-gray-600 hover:bg-gray-100 transition">Close</button>
+                  <button onClick={() => { generatePDF(viewChallan); }} className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold bg-[#1B512D] text-white hover:bg-[#163f23] transition">
+                    <Download size={16} /> Download PDF
+                  </button>
+                </div>
+              </div>
+            ) : null}
           </div>
         </div>
       )}
