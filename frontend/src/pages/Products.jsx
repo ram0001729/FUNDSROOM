@@ -223,7 +223,8 @@ const Products = () => {
           <button onClick={() => setIsBulkModalOpen(true)} className="bg-white border border-[#e5e7eb] px-4 py-2 rounded-full text-[13px] font-medium hover:bg-[#f9fafb] transition-colors">
             Upload Excel
           </button>
-          <button onClick={handleExportCSV} className="bg-white border border-[#e5e7eb] px-4 py-2 rounded-full text-[13px] font-medium hover:bg-[#f9fafb] transition-colors">
+          <button onClick={handleExportCSV} className="flex items-center gap-2 px-4 py-2 rounded-full text-[13px] font-semibold bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-md hover:shadow-lg hover:from-emerald-600 hover:to-teal-600 transition-all duration-200">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             Export CSV
           </button>
           <button onClick={openAddModal} className="bg-[#2563eb] text-white px-4 py-2 rounded-full text-[13px] font-medium hover:brightness-95 shadow-sm transition-all">

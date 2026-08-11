@@ -126,7 +126,8 @@ const Customers = () => {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <button onClick={handleExportCSV} className="btn-ghost flex items-center shrink-0">
+          <button onClick={handleExportCSV} className="flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-semibold bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-md hover:shadow-lg hover:from-emerald-600 hover:to-teal-600 transition-all duration-200 shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             Export CSV
           </button>
           <button onClick={openAddModal} className="btn-primary flex items-center shrink-0">
