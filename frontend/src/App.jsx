@@ -97,6 +97,7 @@ const App = () => {
           <Route path="/dispatch/pending" element={<WarehouseDispatch />} />
           <Route path="/dispatch/completed" element={<Placeholder title="Dispatched Orders" />} />
           
+          <Route path="/invoices" element={<Invoices />} />
           <Route path="/invoices/pending" element={<Invoices />} />
           <Route path="/invoices/paid" element={<Invoices />} />
           <Route path="/invoices/overdue" element={<Invoices />} />

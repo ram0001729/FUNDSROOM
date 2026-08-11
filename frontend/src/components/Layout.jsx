@@ -94,7 +94,7 @@ const Layout = () => {
     { name: 'CRM / Follow-ups', path: '/crm/leads', icon: Users, roles: ['Sales'], badge: counts.newLeads, badgeColor: 'bg-[#73E2A7] text-[#1B512D]' },
     
     // Financial & Accounting
-    { name: 'Invoices', path: '/billing', icon: FileText, roles: ['Admin', 'Accounts'], badge: counts.overdueInvoices, badgeColor: 'bg-rose-500' },
+    { name: 'Invoices', path: '/invoices', icon: FileText, roles: ['Admin', 'Accounts'], badge: counts.overdueInvoices, badgeColor: 'bg-rose-500' },
     { name: 'Payments', path: '/payments/history', icon: CreditCard, roles: ['Accounts'] },
     { name: 'Accounts', path: '/billing', icon: Briefcase, roles: ['Admin'] },
     { name: 'Outstanding', path: '/payments/outstanding', icon: FileText, roles: ['Accounts'], badge: counts.overdueInvoices, badgeColor: 'bg-rose-500' },
