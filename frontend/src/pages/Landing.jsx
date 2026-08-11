@@ -201,7 +201,7 @@ const Landing = () => {
       </section>
 
       {/* 6. CTA SECTION */}
-      <section className="w-full bg-[#dff5c7] flex justify-center py-20 px-8 border-y-8 border-yellow-400">
+      <section className="w-full bg-gradient-to-br from-[#dff5c7] via-[#e6fcf0] to-[#dff5c7] flex justify-center py-20 px-8">
         <div className="max-w-6xl w-full flex flex-col md:flex-row items-center justify-between bg-white rounded-3xl p-12 shadow-2xl">
           <div className="flex-1 pr-8">
             <h2 className="text-[#196568] text-4xl font-black mb-4">Ready to streamline your wholesale business?</h2>
