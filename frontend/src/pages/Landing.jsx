@@ -15,33 +15,34 @@ const Landing = () => {
   };
 
   return (
-    <div className="font-sans flex flex-col min-h-screen bg-white overflow-x-hidden relative">
+  return (
+    <div className="font-sans flex flex-col min-h-screen bg-gradient-to-b from-[#a7f3d0]/60 via-[#bbf7d0]/30 to-slate-50 overflow-x-hidden relative text-gray-800">
       
-      {/* 1. TOP HEADER (Floating Glass Navbar) */}
-      <div className="absolute top-6 left-1/2 -translate-x-1/2 w-[95%] max-w-7xl z-50">
-        <header className="bg-white/40 backdrop-blur-md border border-white/60 h-[75px] rounded-full flex items-center justify-between px-6 lg:px-8 shadow-lg">
-          <div className="flex items-center gap-10">
-            <div className="flex items-center drop-shadow-md">
-              <img src="/distribucore-logo.png" alt="DistribuCore" className="h-10 object-contain" />
+      {/* 1. TOP FLOATING MINT HEADER */}
+      <div className="pt-5 px-4 lg:px-8 max-w-7xl mx-auto w-full z-50">
+        <header className="bg-gradient-to-r from-[#a7f3d0]/90 via-[#bbf7d0]/90 to-[#a7f3d0]/90 backdrop-blur-xl border border-white/90 h-[68px] rounded-full flex items-center justify-between px-6 lg:px-8 shadow-[0_8px_32px_rgba(16,185,129,0.2)]">
+          <div className="flex items-center gap-8">
+            <div className="flex items-center">
+              <img src="/distribucore-logo.png" alt="DistribuCore" className="h-9 object-contain drop-shadow-sm" />
             </div>
-            <nav className="hidden md:flex items-center gap-6 font-bold text-[15px] text-[#1a2c3a]">
-              <a href="#features" className="hover:text-green-700 transition-colors">Modules</a>
-              <a href="#about" className="hover:text-green-700 transition-colors">About</a>
-              <a href="#contact" className="hover:text-green-700 transition-colors">Support</a>
+            <nav className="hidden md:flex items-center gap-6 font-bold text-[14px] text-[#1B512D]">
+              <a href="#features" className="hover:text-emerald-900 transition-colors">Modules</a>
+              <a href="#about" className="hover:text-emerald-900 transition-colors">About</a>
+              <a href="#contact" className="hover:text-emerald-900 transition-colors">Support</a>
             </nav>
           </div>
           
           <div className="flex items-center gap-3">
-            <Link to={isAuthenticated ? "/dashboard" : "/register"} className="bg-amber-400 hover:bg-amber-500 text-black font-bold py-2.5 px-6 rounded-full shadow-md transition-transform hover:scale-105 active:scale-95 text-[14px]">
+            <Link to={isAuthenticated ? "/dashboard" : "/register"} className="bg-amber-400 hover:bg-amber-500 text-gray-900 font-extrabold py-2 px-5 rounded-full shadow-sm hover:shadow-md transition-all hover:scale-105 active:scale-95 text-[13px]">
               Get Started
             </Link>
-            <Link to="/login" className="bg-amber-400 hover:bg-amber-500 text-black font-bold py-2.5 px-6 rounded-full shadow-md transition-transform hover:scale-105 active:scale-95 text-[14px]">
+            <Link to="/login" className="bg-amber-400 hover:bg-amber-500 text-gray-900 font-extrabold py-2 px-5 rounded-full shadow-sm hover:shadow-md transition-all hover:scale-105 active:scale-95 text-[13px]">
               Login
             </Link>
             
             <select 
               onChange={(e) => changeLanguage(e.target.value)}
-              className="ml-2 appearance-none bg-white text-gray-800 text-[13px] font-bold py-2.5 pl-4 pr-8 rounded-full shadow-md focus:outline-none cursor-pointer border border-gray-100"
+              className="ml-1 bg-white/80 backdrop-blur-sm text-gray-800 text-[12px] font-bold py-2 pl-3 pr-7 rounded-full shadow-sm focus:outline-none cursor-pointer border border-white/90"
             >
               <option value="en">English</option>
               <option value="hi">हिन्दी</option>
@@ -52,45 +53,53 @@ const Landing = () => {
         </header>
       </div>
 
-      {/* 2. HERO SECTION (Solid Red) */}
-      <section className="w-full bg-[#dff5c7] flex flex-col lg:flex-row items-center justify-between px-10 lg:px-24 pt-32 pb-20 min-h-[600px] relative overflow-hidden">
-        
-        {/* Decor */}
-        <div className="absolute top-0 left-0 w-64 opacity-50 pointer-events-none">
-          <img src="https://res.cloudinary.com/dp5rqtjnk/image/upload/v1766664536/conorimage_zimsv8.svg" alt="Decor" className="w-full" />
-        </div>
+      {/* STRUCTURAL GAP BETWEEN HEADER AND HERO CARD */}
+      <div className="h-5"></div>
 
-        {/* Left Text */}
-        <div className="flex-1 flex flex-col justify-center max-w-[800px] text-left relative z-10 pl-10">
-          <h2 className="text-shine-black font-black text-[3rem] lg:text-[4rem] leading-[1.1] tracking-tight mb-4 animate-float-smooth">
-            Complete Wholesale ERP & CRM System
-          </h2>
-          <h3 className="text-black font-black text-[1.8rem] mb-6 tracking-wide">
-            Streamline your distribution operations
-          </h3>
-          <p className="text-black font-medium text-[19px] opacity-90 tracking-wide mt-2">
-            Manage customers, products, stock, sales challans, and invoices in one place.
-          </p>
-          <p className="text-black font-medium text-[19px] opacity-90 tracking-wide mt-2">
-            Built for sales, warehouse, and accounts teams.
-          </p>
-        </div>
-
-        {/* Right Image */}
-        <div className="flex-1 flex flex-col items-center justify-center mt-16 lg:mt-0 relative z-10">
-          <div className="relative w-[400px] h-[400px] flex items-center justify-center">
-            <div className="absolute inset-0 bg-[#dff5c7] shadow-[0_0_90px_20px_rgba(255,255,255,0.8)] rounded-sm"></div>
-            <img 
-              src="https://res.cloudinary.com/dp5rqtjnk/image/upload/v1766664716/Shopping_bag-cuate_nerjbu.svg" 
-              alt="Shopping bag" 
-              className="relative z-10 w-full h-full object-cover p-4" 
-            />
+      {/* 2. HERO SECTION CARD CONTAINER WITH STRUCTURAL GAP & ROUNDED CORNERS */}
+      <div className="max-w-7xl mx-auto w-full px-4 lg:px-8">
+        <section className="w-full bg-gradient-to-br from-[#f4fce3] to-[#e6fcf0] rounded-[36px] border border-white/80 shadow-[0_12px_40px_rgba(16,185,129,0.15)] flex flex-col lg:flex-row items-center justify-between px-8 lg:px-16 py-16 min-h-[540px] relative overflow-hidden">
+          
+          {/* Decor */}
+          <div className="absolute top-0 left-0 w-64 opacity-40 pointer-events-none">
+            <img src="https://res.cloudinary.com/dp5rqtjnk/image/upload/v1766664536/conorimage_zimsv8.svg" alt="Decor" className="w-full" />
           </div>
-          <p className="text-black font-bold text-[16px] mt-10 tracking-wide">
-            Real-time Stock • Sales Challans • Basic CRM Follow-ups
-          </p>
-        </div>
-      </section>
+
+          {/* Left Text */}
+          <div className="flex-1 flex flex-col justify-center max-w-[750px] text-left relative z-10 lg:pl-6">
+            <h2 className="font-black text-[2.8rem] lg:text-[3.6rem] leading-[1.1] tracking-tight mb-4 text-[#1B512D]">
+              Complete Wholesale ERP & CRM System
+            </h2>
+            <h3 className="text-gray-800 font-extrabold text-[1.5rem] mb-5 tracking-wide">
+              Streamline your distribution operations
+            </h3>
+            <p className="text-gray-700 font-semibold text-[17px] leading-relaxed opacity-90 mt-1">
+              Manage customers, products, stock, sales challans, and invoices in one place.
+            </p>
+            <p className="text-gray-700 font-semibold text-[17px] leading-relaxed opacity-90 mt-1">
+              Built for sales, warehouse, and accounts teams.
+            </p>
+          </div>
+
+          {/* Right Image */}
+          <div className="flex-1 flex flex-col items-center justify-center mt-12 lg:mt-0 relative z-10">
+            <div className="relative w-[360px] h-[360px] flex items-center justify-center">
+              <div className="absolute inset-0 bg-[#dff5c7]/60 shadow-[0_0_80px_20px_rgba(255,255,255,0.9)] rounded-full"></div>
+              <img 
+                src="https://res.cloudinary.com/dp5rqtjnk/image/upload/v1766664716/Shopping_bag-cuate_nerjbu.svg" 
+                alt="Shopping bag" 
+                className="relative z-10 w-full h-full object-contain p-4 drop-shadow-md" 
+              />
+            </div>
+            <p className="text-[#1B512D] font-bold text-[15px] mt-8 tracking-wide bg-white/70 backdrop-blur-md px-5 py-2 rounded-full border border-white shadow-sm">
+              Real-time Stock • Sales Challans • Basic CRM Follow-ups
+            </p>
+          </div>
+        </section>
+      </div>
+
+      {/* STRUCTURAL GAP BEFORE MODULES SECTION */}
+      <div className="h-8"></div>
 
       {/* 3. SHOP WITH CATEGORIES */}
       <section id="features" className="w-full bg-gradient-to-br from-[#e0f2fe] via-[#dbeafe] to-[#e0f2fe] flex flex-col items-center py-20 pb-28 border-t border-sky-200/50">
