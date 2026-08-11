@@ -123,58 +123,144 @@ const Challans = () => {
       const res = await api.get(`/challans/${ch.id}`);
       const challanData = res.data;
 
-      const doc = new jsPDF();
-      
-      doc.setFontSize(22);
-      doc.setTextColor(27, 81, 45);
-      doc.text('DistribuCore', 14, 22);
-      
-      doc.setFontSize(10);
-      doc.setTextColor(100);
-      doc.text('Hyperlocal Business Platform', 14, 28);
-      doc.text('GSTIN: [PLACEHOLDER]', 14, 33);
-      
+      const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+      const pageW = doc.internal.pageSize.getWidth();
+
+      // --- Header Background ---
+      doc.setFillColor(27, 81, 45);
+      doc.rect(0, 0, pageW, 38, 'F');
+
+      // --- Company Name ---
+      doc.setFontSize(24);
+      doc.setTextColor(255, 255, 255);
+      doc.setFont('helvetica', 'bold');
+      doc.text('FUNDSROOM', 14, 18);
+
+      // --- Tagline ---
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(180, 230, 180);
+      doc.text('Business Management Platform', 14, 25);
+      doc.text('support@fundsroom.com', 14, 31);
+
+      // --- "DELIVERY CHALLAN" label on right ---
       doc.setFontSize(16);
-      doc.setTextColor(0);
-      doc.text('TAX INVOICE / CHALLAN', 14, 45);
-      
+      doc.setTextColor(255, 255, 255);
+      doc.setFont('helvetica', 'bold');
+      doc.text('DELIVERY CHALLAN', pageW - 14, 20, { align: 'right' });
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(180, 230, 180);
+      doc.text(`#${challanData.challan_number}`, pageW - 14, 27, { align: 'right' });
+
+      // --- Divider ---
+      doc.setDrawColor(27, 81, 45);
+      doc.setLineWidth(0.5);
+      doc.line(14, 44, pageW - 14, 44);
+
+      // --- Challan Info Box ---
       doc.setFontSize(10);
-      doc.text(`Challan No: ${challanData.challan_number}`, 14, 55);
-      doc.text(`Date: ${new Date(challanData.created_at).toLocaleDateString()}`, 14, 61);
-      doc.text(`Status: ${challanData.status}`, 14, 67);
-      
-      doc.text(`Billed To:`, 120, 55);
-      doc.setFont(undefined, 'bold');
-      doc.text(challanData.customer_name || 'Customer', 120, 61);
-      doc.setFont(undefined, 'normal');
-      
-      const tableColumn = ["#", "Product", "SKU", "Qty"];
+      doc.setTextColor(80, 80, 80);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`Date:`, 14, 52);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(30, 30, 30);
+      doc.text(`${new Date(challanData.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}`, 35, 52);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(80, 80, 80);
+      doc.text(`Status:`, 14, 59);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(challanData.status === 'Confirmed' ? 0 : 180, challanData.status === 'Confirmed' ? 128 : 100, 0);
+      doc.text(`${challanData.status}`, 35, 59);
+
+      // --- Bill To ---
+      doc.setTextColor(80, 80, 80);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.text('BILL TO:', pageW - 80, 47);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(12);
+      doc.setTextColor(27, 81, 45);
+      doc.text(challanData.customer_name || 'Walk-in Customer', pageW - 80, 54);
+      doc.setFontSize(9);
+      doc.setTextColor(100, 100, 100);
+      doc.setFont('helvetica', 'normal');
+
+      // --- Items Table ---
+      const tableColumn = ['#', 'Product Name', 'SKU', 'Qty'];
       const tableRows = [];
-      
-      if (challanData.items) {
+      let totalQty = 0;
+
+      if (challanData.items && challanData.items.length > 0) {
         challanData.items.forEach((item, idx) => {
+          totalQty += parseInt(item.quantity || 0);
           tableRows.push([
             idx + 1,
-            item.product_name,
+            item.product_name || '-',
             item.sku || '-',
             item.quantity
           ]);
         });
+      } else {
+        tableRows.push([1, challanData.product_name || 'N/A', '-', challanData.total_quantity || 0]);
+        totalQty = challanData.total_quantity || 0;
       }
-      
+
       doc.autoTable({
-        startY: 80,
+        startY: 70,
         head: [tableColumn],
         body: tableRows,
-        headStyles: { fillColor: [27, 81, 45] },
-        theme: 'striped'
+        headStyles: {
+          fillColor: [27, 81, 45],
+          textColor: 255,
+          fontStyle: 'bold',
+          fontSize: 10,
+        },
+        bodyStyles: { fontSize: 9, textColor: [30, 30, 30] },
+        alternateRowStyles: { fillColor: [240, 250, 240] },
+        columnStyles: {
+          0: { cellWidth: 12, halign: 'center' },
+          3: { cellWidth: 20, halign: 'center' },
+        },
+        theme: 'grid',
+        margin: { left: 14, right: 14 },
       });
-      
-      doc.save(`Invoice_${challanData.challan_number}.pdf`);
-      
+
+      const finalY = doc.lastAutoTable.finalY + 8;
+
+      // --- Total Row ---
+      doc.setFillColor(27, 81, 45);
+      doc.roundedRect(pageW - 80, finalY, 66, 14, 3, 3, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.text(`Total Qty: ${totalQty}`, pageW - 47, finalY + 9, { align: 'center' });
+
+      // --- Signature Section ---
+      const sigY = finalY + 30;
+      doc.setDrawColor(180, 180, 180);
+      doc.setLineWidth(0.3);
+      doc.line(14, sigY, 70, sigY);
+      doc.line(pageW - 70, sigY, pageW - 14, sigY);
+      doc.setFontSize(8);
+      doc.setTextColor(120, 120, 120);
+      doc.setFont('helvetica', 'normal');
+      doc.text('Authorized Signatory', 14, sigY + 5);
+      doc.text("Receiver's Signature", pageW - 14, sigY + 5, { align: 'right' });
+
+      // --- Footer ---
+      doc.setFontSize(7.5);
+      doc.setTextColor(160, 160, 160);
+      doc.text('This is a computer-generated document and does not require a physical signature.', pageW / 2, 287, { align: 'center' });
+      doc.setTextColor(27, 81, 45);
+      doc.text('FUNDSROOM © 2026', pageW / 2, 292, { align: 'center' });
+
+      doc.save(`Challan_${challanData.challan_number}.pdf`);
+
     } catch (error) {
       console.error('Failed to generate PDF:', error);
-      alert('Failed to generate PDF.');
+      alert('Failed to generate PDF. Please try again.');
     }
   };
 
