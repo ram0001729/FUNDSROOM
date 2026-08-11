@@ -215,8 +215,8 @@ const Landing = () => {
           <div className="flex-1 pr-8">
             <h2 className="text-[#196568] text-4xl font-black mb-4">Ready to streamline your wholesale business?</h2>
             <p className="text-gray-600 text-xl font-medium mb-8">Deploy our full-stack ERP system to manage your distribution workflow today.</p>
-            <Link to={isAuthenticated ? "/dashboard" : "/login"} className="inline-block bg-[#196568] hover:bg-[#145254] text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-transform hover:scale-105 text-lg">
-              Access Dashboard
+            <Link to={isAuthenticated ? "/dashboard" : "/login"} className="inline-block bg-[#196568] hover:bg-[#145254] !text-white text-white font-extrabold py-3.5 px-8 rounded-xl shadow-lg transition-transform hover:scale-105 text-lg tracking-wide uppercase cursor-pointer">
+              <span className="!text-white text-white font-extrabold">Access Dashboard</span>
             </Link>
           </div>
           <div className="flex-1 flex justify-end">
