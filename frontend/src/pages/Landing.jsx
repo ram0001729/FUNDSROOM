@@ -25,24 +25,24 @@ const Landing = () => {
             <div className="flex items-center">
               <img src="/distribucore-logo.png" alt="DistribuCore" className="h-9 object-contain drop-shadow-sm" />
             </div>
-            <nav className="hidden md:flex items-center gap-6 font-bold text-[14px] text-[#1B512D]">
-              <a href="#features" className="hover:text-emerald-900 transition-colors">Modules</a>
-              <a href="#about" className="hover:text-emerald-900 transition-colors">About</a>
-              <a href="#contact" className="hover:text-emerald-900 transition-colors">Support</a>
+            <nav className="hidden md:flex items-center gap-7 font-['Plus_Jakarta_Sans',sans-serif] font-extrabold text-[13px] tracking-wide text-[#1B512D]">
+              <a href="#features" className="hover:text-emerald-950 transition-all hover:scale-105">Modules</a>
+              <a href="#about" className="hover:text-emerald-950 transition-all hover:scale-105">About</a>
+              <a href="#contact" className="hover:text-emerald-950 transition-all hover:scale-105">Support</a>
             </nav>
           </div>
           
-          <div className="flex items-center gap-3">
-            <Link to={isAuthenticated ? "/dashboard" : "/register"} className="bg-amber-400 hover:bg-amber-500 text-gray-900 font-extrabold py-2 px-5 rounded-full shadow-sm hover:shadow-md transition-all hover:scale-105 active:scale-95 text-[13px]">
+          <div className="flex items-center gap-3 font-['Plus_Jakarta_Sans',sans-serif]">
+            <Link to={isAuthenticated ? "/dashboard" : "/register"} className="bg-amber-400 hover:bg-amber-500 text-gray-900 font-extrabold py-2 px-5 rounded-full shadow-sm hover:shadow-md transition-all hover:scale-105 active:scale-95 text-[12px] tracking-wider uppercase">
               Get Started
             </Link>
-            <Link to="/login" className="bg-amber-400 hover:bg-amber-500 text-gray-900 font-extrabold py-2 px-5 rounded-full shadow-sm hover:shadow-md transition-all hover:scale-105 active:scale-95 text-[13px]">
+            <Link to="/login" className="bg-amber-400 hover:bg-amber-500 text-gray-900 font-extrabold py-2 px-5 rounded-full shadow-sm hover:shadow-md transition-all hover:scale-105 active:scale-95 text-[12px] tracking-wider uppercase">
               Login
             </Link>
             
             <select 
               onChange={(e) => changeLanguage(e.target.value)}
-              className="ml-1 bg-white/80 backdrop-blur-sm text-gray-800 text-[12px] font-bold py-2 pl-3 pr-7 rounded-full shadow-sm focus:outline-none cursor-pointer border border-white/90"
+              className="ml-1 bg-white/90 backdrop-blur-sm text-gray-800 text-[12px] font-extrabold py-2 pl-3 pr-7 rounded-full shadow-sm focus:outline-none cursor-pointer border border-white/90 tracking-wide"
             >
               <option value="en">English</option>
               <option value="hi">हिन्दी</option>
