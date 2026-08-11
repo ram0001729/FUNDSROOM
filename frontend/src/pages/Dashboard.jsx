@@ -269,25 +269,50 @@ const Dashboard = () => {
           </ul>
         </div>
       </div>
+      {/* Second Row — Overall Business Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+          <div className="text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-1 flex items-center gap-1"><Users size={11}/> Total Customers</div>
+          <div className="text-2xl font-bold text-gray-800">{reportData?.overall_stats?.total_customers || 0}</div>
+          <div className="text-[11px] text-emerald-600 mt-1">+{reportData?.overall_stats?.new_customers_30d || 0} this month</div>
+        </div>
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+          <div className="text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-1 flex items-center gap-1"><ShoppingBag size={11}/> Total Orders</div>
+          <div className="text-2xl font-bold text-gray-800">{reportData?.overall_stats?.total_sales_orders || 0}</div>
+          <div className="text-[11px] text-blue-600 mt-1">{reportData?.overall_stats?.orders_this_week || 0} this week</div>
+        </div>
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+          <div className="text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-1 flex items-center gap-1"><IndianRupee size={11}/> All-Time Revenue</div>
+          <div className="text-2xl font-bold text-gray-800">₹{parseFloat(reportData?.overall_stats?.total_revenue_all_time || 0).toLocaleString('en-IN', {maximumFractionDigits: 0})}</div>
+          <div className="text-[11px] text-purple-600 mt-1">₹{parseFloat(reportData?.overall_stats?.revenue_this_week || 0).toLocaleString('en-IN', {maximumFractionDigits: 0})} this week</div>
+        </div>
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+          <div className="text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-1 flex items-center gap-1"><FileText size={11}/> Active Products</div>
+          <div className="text-2xl font-bold text-gray-800">{reportData?.overall_stats?.total_active_products || 0}</div>
+          <div className="text-[11px] text-amber-600 mt-1">{reportData?.overall_stats?.total_challans_confirmed || 0} confirmed challans</div>
+        </div>
+      </div>
     </>
   );
 
   const renderSalesDashboard = () => (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
         <div className="bg-gradient-to-br from-blue-50 to-white rounded-2xl border border-blue-100 shadow-sm p-5 hover:shadow-md hover:-translate-y-1 transition-all duration-300">
           <div className="flex justify-between items-start mb-2">
-            <div className="text-[13px] text-blue-600 font-semibold uppercase tracking-wider">My Sales (30 Days)</div>
+            <div className="text-[13px] text-blue-600 font-semibold uppercase tracking-wider">Sales (30 Days)</div>
             <div className="p-2 bg-blue-100 rounded-lg text-blue-600"><IndianRupee size={16} /></div>
           </div>
-          <div className="text-2xl font-bold text-gray-800">₹{parseFloat(stats?.total_sales || 0).toFixed(2)}</div>
+          <div className="text-2xl font-bold text-gray-800">₹{parseFloat(stats?.total_sales || 0).toLocaleString('en-IN', {maximumFractionDigits: 0})}</div>
+          <div className="text-[11px] text-blue-500 mt-1">₹{parseFloat(reportData?.sales_dashboard_stats?.revenue_today || 0).toLocaleString('en-IN', {maximumFractionDigits: 0})} today</div>
         </div>
         <div className="bg-gradient-to-br from-purple-50 to-white rounded-2xl border border-purple-100 shadow-sm p-5 hover:shadow-md hover:-translate-y-1 transition-all duration-300">
           <div className="flex justify-between items-start mb-2">
-            <div className="text-[13px] text-purple-600 font-semibold uppercase tracking-wider">New Leads</div>
+            <div className="text-[13px] text-purple-600 font-semibold uppercase tracking-wider">New Leads (30d)</div>
             <div className="p-2 bg-purple-100 rounded-lg text-purple-600"><Users size={16} /></div>
           </div>
           <div className="text-2xl font-bold text-gray-800">{reportData?.sales_dashboard_stats?.new_leads || 0}</div>
+          <div className="text-[11px] text-purple-500 mt-1">{reportData?.overall_stats?.total_customers || 0} total customers</div>
         </div>
         <div className="bg-gradient-to-br from-emerald-50 to-white rounded-2xl border border-emerald-100 shadow-sm p-5 hover:shadow-md hover:-translate-y-1 transition-all duration-300">
           <div className="flex justify-between items-start mb-2">
@@ -295,13 +320,15 @@ const Dashboard = () => {
             <div className="p-2 bg-emerald-100 rounded-lg text-emerald-600"><AlertTriangle size={16} /></div>
           </div>
           <div className="text-2xl font-bold text-gray-800">{reportData?.sales_dashboard_stats?.follow_ups_today || 0}</div>
+          <div className="text-[11px] text-emerald-500 mt-1">Scheduled for today</div>
         </div>
         <div className="bg-gradient-to-br from-amber-50 to-white rounded-2xl border border-amber-100 shadow-sm p-5 hover:shadow-md hover:-translate-y-1 transition-all duration-300">
           <div className="flex justify-between items-start mb-2">
-            <div className="text-[13px] text-amber-600 font-semibold uppercase tracking-wider">Pending Orders</div>
+            <div className="text-[13px] text-amber-600 font-semibold uppercase tracking-wider">Orders Today</div>
             <div className="p-2 bg-amber-100 rounded-lg text-amber-600"><ShoppingBag size={16} /></div>
           </div>
-          <div className="text-2xl font-bold text-gray-800">{reportData?.sales_dashboard_stats?.pending_orders || 0}</div>
+          <div className="text-2xl font-bold text-gray-800">{reportData?.sales_dashboard_stats?.orders_today || 0}</div>
+          <div className="text-[11px] text-amber-500 mt-1">{reportData?.sales_dashboard_stats?.pending_orders || 0} pending approval</div>
         </div>
       </div>
 

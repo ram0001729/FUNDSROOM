@@ -138,12 +138,28 @@ router.get('/', authMiddleware(['Admin', 'Sales', 'Accounts']), async (req, res)
     const accountsStatsResult = await db.query(accountsStatsQuery);
     const accounts = accountsStatsResult.rows[0];
 
+    // Overall Business Stats
+    const overallStatsResult = await db.query(`
+      SELECT
+        (SELECT COUNT(*) FROM customers) as total_customers,
+        (SELECT COUNT(*) FROM sales_orders) as total_sales_orders,
+        (SELECT COUNT(*) FROM challans WHERE status = 'Confirmed') as total_challans_confirmed,
+        (SELECT COALESCE(SUM(total_amount),0) FROM sales_orders) as total_revenue_all_time,
+        (SELECT COUNT(*) FROM products WHERE available = true) as total_active_products,
+        (SELECT COUNT(*) FROM customers WHERE created_at >= CURRENT_DATE - INTERVAL '30 days') as new_customers_30d,
+        (SELECT COUNT(*) FROM sales_orders WHERE created_at >= CURRENT_DATE - INTERVAL '7 days') as orders_this_week,
+        (SELECT COALESCE(SUM(total_amount),0) FROM sales_orders WHERE created_at >= CURRENT_DATE - INTERVAL '7 days') as revenue_this_week
+    `);
+    const overall = overallStatsResult.rows[0];
+
     // Sales Dashboard Stats (with Daily Trend)
     const salesStatsResult = await db.query(`
       SELECT 
         (SELECT COUNT(*) FROM customers WHERE status = 'Lead' AND created_at >= CURRENT_DATE - INTERVAL '30 days') as new_leads,
         (SELECT COUNT(*) FROM customers WHERE follow_up_date::date = CURRENT_DATE) as follow_ups_today,
-        (SELECT COUNT(*) FROM sales_orders WHERE status = 'Created') as pending_orders
+        (SELECT COUNT(*) FROM sales_orders WHERE status = 'Created') as pending_orders,
+        (SELECT COUNT(*) FROM sales_orders WHERE created_at >= CURRENT_DATE) as orders_today,
+        (SELECT COALESCE(SUM(total_amount),0) FROM sales_orders WHERE created_at >= CURRENT_DATE) as revenue_today
     `);
     const salesDash = salesStatsResult.rows[0];
 
@@ -207,11 +223,23 @@ router.get('/', authMiddleware(['Admin', 'Sales', 'Accounts']), async (req, res)
       sales_dashboard_stats: {
         new_leads: parseInt(salesDash.new_leads) || 0,
         follow_ups_today: parseInt(salesDash.follow_ups_today) || 0,
-        pending_orders: parseInt(salesDash.pending_orders) || 0
+        pending_orders: parseInt(salesDash.pending_orders) || 0,
+        orders_today: parseInt(salesDash.orders_today) || 0,
+        revenue_today: parseFloat(salesDash.revenue_today) || 0
       },
       warehouse_dashboard_stats: {
         total_products: parseInt(warehouseDash.total_products) || 0,
         pending_dispatches: parseInt(warehouseDash.pending_dispatches) || 0
+      },
+      overall_stats: {
+        total_customers: parseInt(overall.total_customers) || 0,
+        total_sales_orders: parseInt(overall.total_sales_orders) || 0,
+        total_challans_confirmed: parseInt(overall.total_challans_confirmed) || 0,
+        total_revenue_all_time: parseFloat(overall.total_revenue_all_time) || 0,
+        total_active_products: parseInt(overall.total_active_products) || 0,
+        new_customers_30d: parseInt(overall.new_customers_30d) || 0,
+        orders_this_week: parseInt(overall.orders_this_week) || 0,
+        revenue_this_week: parseFloat(overall.revenue_this_week) || 0
       }
     });
 
