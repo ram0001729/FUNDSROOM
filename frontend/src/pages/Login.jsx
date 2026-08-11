@@ -35,10 +35,10 @@ const Login = () => {
 
   const demoLogin = (role) => {
     const roles = {
-      Admin: { user: 'admin1', pass: 'admin123' },
-      Sales: { user: 'sales1', pass: 'admin123' },
-      Warehouse: { user: 'warehouse1', pass: 'admin123' },
-      Accounts: { user: 'accounts1', pass: 'admin123' }
+      Admin: { user: 'admin', pass: 'admin123' },
+      Sales: { user: 'sales_user', pass: 'admin123' },
+      Warehouse: { user: 'warehouse_user', pass: 'admin123' },
+      Accounts: { user: 'accounts_user', pass: 'admin123' }
     };
     setUsername(roles[role].user);
     setPassword(roles[role].pass);
