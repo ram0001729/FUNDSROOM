@@ -25,6 +25,7 @@ const Landing = () => {
           <div className="flex items-center gap-8">
             <Logo to="/" />
             <nav className="hidden md:flex items-center gap-7 font-['Plus_Jakarta_Sans',sans-serif] font-extrabold text-[13px] tracking-wide text-[#1B512D]">
+              <Link to="/" className="hover:text-emerald-950 transition-all hover:scale-105">Home</Link>
               <a href="#features" className="hover:text-emerald-950 transition-all hover:scale-105">Modules</a>
               <a href="#about" className="hover:text-emerald-950 transition-all hover:scale-105">About</a>
               <a href="#contact" className="hover:text-emerald-950 transition-all hover:scale-105">Support</a>

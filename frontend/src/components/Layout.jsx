@@ -146,7 +146,7 @@ const Layout = () => {
             
             {/* Action Buttons */}
             <div className="flex items-center gap-2 font-['Plus_Jakarta_Sans',sans-serif]">
-              <Link to="/dashboard" className="flex items-center gap-1.5 px-4 py-2 bg-white/70 hover:bg-white/95 border border-white/90 shadow-sm rounded-full text-gray-800 hover:text-[#1B512D] transition-all text-[12px] font-extrabold tracking-wide uppercase" title="Home">
+              <Link to="/" className="flex items-center gap-1.5 px-4 py-2 bg-white/70 hover:bg-white/95 border border-white/90 shadow-sm rounded-full text-gray-800 hover:text-[#1B512D] transition-all text-[12px] font-extrabold tracking-wide uppercase" title="Go to Website Home">
                 <Home size={15} />
                 <span className="hidden lg:inline-block">Home</span>
               </Link>
