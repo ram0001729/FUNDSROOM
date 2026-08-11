@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import useAuthStore from '../store/authStore';
 import api from '../api/axios';
+import Logo from '../components/Logo';
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -39,9 +40,9 @@ const Register = () => {
       <div className="w-full max-w-md glass-panel p-8">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
-            <img src="/distribucore-logo.png" alt="DistribuCore" className="h-14 object-contain" />
+            <Logo size="lg" to="/" />
           </div>
-          <p className="text-gray-500">Create a new account</p>
+          <p className="text-gray-500 font-medium text-sm mt-2">Create a new account</p>
         </div>
         
         {error && (

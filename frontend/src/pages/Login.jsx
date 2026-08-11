@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import api from '../api/axios';
 import useAuthStore from '../store/authStore';
+import Logo from '../components/Logo';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -52,9 +53,9 @@ const Login = () => {
       <div className="w-full max-w-md glass-panel p-8">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
-            <img src="/distribucore-logo.png" alt="DistribuCore" className="h-14 object-contain" />
+            <Logo size="lg" to="/" />
           </div>
-          <p className="text-gray-500">Sign in to your account</p>
+          <p className="text-gray-500 font-medium text-sm mt-2">Sign in to your account</p>
         </div>
         
         {error && (

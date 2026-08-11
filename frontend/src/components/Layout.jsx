@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import useAuthStore from '../store/authStore';
 import api from '../api/axios';
+import Logo from './Logo';
 import Chatbot from './Chatbot';
 import { Bot, BotMessageSquare, LayoutDashboard, Package, ArrowRightLeft, Receipt, BarChart2, Briefcase, Settings, Search, Bell, Home, Globe, ChevronDown, ChevronUp, Users, ShoppingCart, Activity, FileText, CreditCard, Truck } from 'lucide-react';
 const Layout = () => {
@@ -120,10 +121,8 @@ const Layout = () => {
         <div className="max-w-7xl mx-auto h-[64px] bg-gradient-to-r from-[#a7f3d0]/70 via-[#bbf7d0]/80 to-[#a7f3d0]/70 backdrop-blur-xl border border-white/80 shadow-[0_8px_32px_rgba(16,185,129,0.25)] rounded-full px-6 flex items-center justify-between transition-all">
         
           {/* Left side: Logo & Brand */}
-          <div className="flex items-center gap-3 w-[220px]">
-            <div className="flex items-center">
-              <img src="/distribucore-logo.png" alt="DistribuCore" className="h-9 object-contain drop-shadow-sm" />
-            </div>
+          <div className="flex items-center gap-3">
+            <Logo to="/dashboard" />
           </div>
           
           {/* Middle: Search Bar */}

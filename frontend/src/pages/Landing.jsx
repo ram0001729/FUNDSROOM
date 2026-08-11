@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CheckCircle2 } from 'lucide-react';
 import useAuthStore from '../store/authStore';
+import Logo from '../components/Logo';
 
 const Landing = () => {
   const { isAuthenticated } = useAuthStore();
@@ -22,9 +23,7 @@ const Landing = () => {
       <div className="pt-5 px-4 lg:px-8 max-w-7xl mx-auto w-full z-50">
         <header className="bg-gradient-to-r from-[#a7f3d0]/90 via-[#bbf7d0]/90 to-[#a7f3d0]/90 backdrop-blur-xl border border-white/90 h-[68px] rounded-full flex items-center justify-between px-6 lg:px-8 shadow-[0_8px_32px_rgba(16,185,129,0.2)]">
           <div className="flex items-center gap-8">
-            <div className="flex items-center">
-              <img src="/distribucore-logo.png" alt="DistribuCore" className="h-9 object-contain drop-shadow-sm" />
-            </div>
+            <Logo to="/" />
             <nav className="hidden md:flex items-center gap-7 font-['Plus_Jakarta_Sans',sans-serif] font-extrabold text-[13px] tracking-wide text-[#1B512D]">
               <a href="#features" className="hover:text-emerald-950 transition-all hover:scale-105">Modules</a>
               <a href="#about" className="hover:text-emerald-950 transition-all hover:scale-105">About</a>
@@ -234,9 +233,7 @@ const Landing = () => {
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
           
           <div>
-            <div className="mb-4">
-              <img src="/distribucore-logo.png" alt="DistribuCore" className="h-10 object-contain drop-shadow-sm" />
-            </div>
+            <Logo to="/" className="mb-4" />
             <p className="text-[#1B512D] font-bold mb-2">+91 908765654</p>
             <p className="text-[#1B512D] font-semibold">distribucoreinfo@distribucore.com</p>
           </div>

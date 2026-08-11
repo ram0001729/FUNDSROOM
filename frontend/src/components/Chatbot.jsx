@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import api from '../api/axios';
+import Logo from './Logo';
 import { Send, Bot, X, Loader2, Sparkles, Mic, MicOff } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -183,8 +184,8 @@ const Chatbot = ({ onClose }) => {
              <Bot size={22} />
           </div>
           <div className="flex flex-col">
-             <img src="/distribucore-logo.png" alt="DistribuCore AI" className="h-6 object-contain mb-1" />
-             <span className="text-[11px] text-[#6b7280] font-medium tracking-wider uppercase">Enterprise Assistant</span>
+             <Logo size="sm" to={null} />
+             <span className="text-[10px] text-[#6b7280] font-bold tracking-wider uppercase mt-0.5">Enterprise AI Assistant</span>
           </div>
         </div>
         <button onClick={onClose} className="relative z-10 text-[#9ca3af] hover:text-[#4b5563] transition-all p-2 rounded-full hover:bg-[#f3f4f6]">
