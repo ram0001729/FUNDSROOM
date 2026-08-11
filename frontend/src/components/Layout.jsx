@@ -25,6 +25,8 @@ const Layout = () => {
 
   useEffect(() => {
     fetchSidebarCounts();
+    const interval = setInterval(fetchSidebarCounts, 8000);
+    return () => clearInterval(interval);
   }, [location.pathname]);
 
   const fetchSidebarCounts = async () => {
@@ -272,7 +274,10 @@ const Layout = () => {
                       </div>
                       <div className="flex items-center gap-1.5">
                         {item.badge > 0 && (
-                          <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${item.badgeColor || 'bg-red-500 text-white'} shadow-sm`}>
+                          <span 
+                            title={`${item.badge} dynamic ${item.name.toLowerCase()} notification${item.badge > 1 ? 's' : ''}`}
+                            className={`text-[10px] font-black px-2 py-0.5 rounded-full ${item.badgeColor || 'bg-red-500 text-white'} shadow-sm flex items-center justify-center min-w-[20px] h-[20px]`}
+                          >
                             {item.badge}
                           </span>
                         )}
@@ -282,6 +287,7 @@ const Layout = () => {
                   ) : (
                     <Link
                       to={item.path}
+                      title={item.badge > 0 ? `${item.badge} dynamic ${item.name.toLowerCase()} notification${item.badge > 1 ? 's' : ''}` : item.name}
                       className={`flex items-center justify-between px-3 py-[10px] mx-1 text-[14px] rounded-xl transition-colors ${
                         isActive 
                           ? 'bg-[#73E2A7] text-[#1B512D] font-bold shadow-sm' 
@@ -293,7 +299,10 @@ const Layout = () => {
                         {item.name}
                       </div>
                       {item.badge > 0 && (
-                        <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${isActive ? 'bg-[#1B512D] text-[#73E2A7]' : (item.badgeColor || 'bg-red-500 text-white')} shadow-sm`}>
+                        <span 
+                          title={`${item.badge} dynamic ${item.name.toLowerCase()} notification${item.badge > 1 ? 's' : ''}`}
+                          className={`text-[10px] font-black px-2 py-0.5 rounded-full ${isActive ? 'bg-[#1B512D] text-[#73E2A7]' : (item.badgeColor || 'bg-red-500 text-white')} shadow-sm flex items-center justify-center min-w-[20px] h-[20px]`}
+                        >
                           {item.badge}
                         </span>
                       )}
