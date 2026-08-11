@@ -258,9 +258,17 @@ const Products = () => {
                   <tr key={p.id} className={`hover:bg-[#f9fafb] transition-colors ${!p.available ? 'opacity-60' : ''}`}>
                     <td className="p-[10px] border-b border-[#e5e7eb]">
                       {p.image_url ? (
-                        <img src={p.image_url.startsWith('http') ? p.image_url : `${api.defaults.baseURL.replace('/api', '')}${p.image_url}`} alt={p.name} className="w-10 h-10 object-cover rounded-lg border border-gray-200 shadow-sm" />
+                        <img 
+                          src={p.image_url.startsWith('http') ? p.image_url : `${api.defaults.baseURL.replace('/api', '')}${p.image_url}`} 
+                          alt={p.name} 
+                          className="w-10 h-10 object-cover rounded-lg border border-gray-200 shadow-sm hover:scale-125 transition-transform duration-200 bg-white"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=150&q=80';
+                          }}
+                        />
                       ) : (
-                        <div className="w-10 h-10 bg-emerald-50 text-emerald-700 rounded-lg flex items-center justify-center text-xs font-bold border border-emerald-100">
+                        <div className="w-10 h-10 bg-emerald-50 text-emerald-700 rounded-lg flex items-center justify-center text-xs font-bold border border-emerald-100 shadow-sm">
                           {p.name ? p.name.charAt(0).toUpperCase() : 'P'}
                         </div>
                       )}
@@ -485,7 +493,15 @@ const Products = () => {
                   {/* Product Header Card */}
                   <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-start gap-6">
                     {productDetails.product.image_url ? (
-                      <img src={productDetails.product.image_url.startsWith('http') ? productDetails.product.image_url : `${api.defaults.baseURL.replace('/api', '')}${productDetails.product.image_url}`} alt={productDetails.product.name} className="w-32 h-32 object-cover rounded-xl border border-gray-100 shadow-sm" />
+                      <img 
+                        src={productDetails.product.image_url.startsWith('http') ? productDetails.product.image_url : `${api.defaults.baseURL.replace('/api', '')}${productDetails.product.image_url}`} 
+                        alt={productDetails.product.name} 
+                        className="w-32 h-32 object-cover rounded-xl border border-gray-100 shadow-sm bg-white"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=300&q=80';
+                        }}
+                      />
                     ) : (
                       <div className="w-32 h-32 bg-gray-50 rounded-xl flex items-center justify-center text-gray-400 border border-gray-100 shadow-sm">No Image</div>
                     )}
