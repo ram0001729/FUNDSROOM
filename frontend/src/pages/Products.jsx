@@ -258,9 +258,11 @@ const Products = () => {
                   <tr key={p.id} className={`hover:bg-[#f9fafb] transition-colors ${!p.available ? 'opacity-60' : ''}`}>
                     <td className="p-[10px] border-b border-[#e5e7eb]">
                       {p.image_url ? (
-                        <img src={`http://localhost:5000${p.image_url}`} alt={p.name} className="w-10 h-10 object-cover rounded-md border border-gray-200" />
+                        <img src={p.image_url.startsWith('http') ? p.image_url : `${api.defaults.baseURL.replace('/api', '')}${p.image_url}`} alt={p.name} className="w-10 h-10 object-cover rounded-lg border border-gray-200 shadow-sm" />
                       ) : (
-                        <div className="w-10 h-10 bg-gray-100 rounded-md flex items-center justify-center text-gray-400 text-xs border border-gray-200">No Img</div>
+                        <div className="w-10 h-10 bg-emerald-50 text-emerald-700 rounded-lg flex items-center justify-center text-xs font-bold border border-emerald-100">
+                          {p.name ? p.name.charAt(0).toUpperCase() : 'P'}
+                        </div>
                       )}
                     </td>
                     <td className="p-[10px] border-b border-[#e5e7eb] font-medium">{p.name} {!p.available && '(Unavailable)'}</td>
@@ -364,7 +366,7 @@ const Products = () => {
                 <label className="block text-[12px] font-medium text-[#6b7280] mb-2">Product Image (Optional)</label>
                 <div className="flex items-center gap-4">
                   {formData.image_url && !imageFile && (
-                    <img src={`http://localhost:5000${formData.image_url}`} alt="Current" className="w-16 h-16 object-cover rounded-lg border border-gray-200 shadow-sm" />
+                    <img src={formData.image_url.startsWith('http') ? formData.image_url : `${api.defaults.baseURL.replace('/api', '')}${formData.image_url}`} alt="Current" className="w-16 h-16 object-cover rounded-lg border border-gray-200 shadow-sm" />
                   )}
                   <input 
                     type="file" 
@@ -483,7 +485,7 @@ const Products = () => {
                   {/* Product Header Card */}
                   <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-start gap-6">
                     {productDetails.product.image_url ? (
-                      <img src={`http://localhost:5000${productDetails.product.image_url}`} alt={productDetails.product.name} className="w-32 h-32 object-cover rounded-xl border border-gray-100 shadow-sm" />
+                      <img src={productDetails.product.image_url.startsWith('http') ? productDetails.product.image_url : `${api.defaults.baseURL.replace('/api', '')}${productDetails.product.image_url}`} alt={productDetails.product.name} className="w-32 h-32 object-cover rounded-xl border border-gray-100 shadow-sm" />
                     ) : (
                       <div className="w-32 h-32 bg-gray-50 rounded-xl flex items-center justify-center text-gray-400 border border-gray-100 shadow-sm">No Image</div>
                     )}
