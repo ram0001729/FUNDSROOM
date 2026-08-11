@@ -18,7 +18,8 @@ const Layout = () => {
     lowStock: 0,
     overdueInvoices: 0,
     pendingDispatches: 0,
-    newLeads: 0
+    newLeads: 0,
+    pendingPurchases: 0
   });
 
   useEffect(() => {
@@ -34,7 +35,8 @@ const Layout = () => {
         lowStock: data.predictive_alerts?.length || 0,
         overdueInvoices: data.accounts_stats?.overdue_invoices || 0,
         pendingDispatches: data.warehouse_dashboard_stats?.pending_dispatches || 0,
-        newLeads: data.sales_dashboard_stats?.new_leads || 0
+        newLeads: data.sales_dashboard_stats?.new_leads || 0,
+        pendingPurchases: data.overall_stats?.pending_purchases || 0
       });
     } catch (err) {
       console.error('Failed to fetch sidebar counts', err);
@@ -81,7 +83,7 @@ const Layout = () => {
     { name: 'Warehouses', path: '/warehouses', icon: Package, roles: ['Warehouse'], badge: counts.pendingDispatches, badgeColor: 'bg-amber-500' },
     
     // Purchases
-    { name: 'Purchases', path: '/purchases/orders', icon: ShoppingCart, roles: ['Admin'] },
+    { name: 'Purchases', path: '/purchases/orders', icon: ShoppingCart, roles: ['Admin'], badge: counts.pendingPurchases, badgeColor: 'bg-emerald-600' },
     
     // Sales Operations
     { name: 'Sales', path: '/sales/orders', icon: ShoppingCart, roles: ['Admin', 'Sales'], badge: counts.pendingOrders, badgeColor: 'bg-amber-500' },

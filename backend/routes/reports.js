@@ -148,7 +148,8 @@ router.get('/', authMiddleware(['Admin', 'Sales', 'Accounts']), async (req, res)
         (SELECT COUNT(*) FROM products WHERE available = true) as total_active_products,
         (SELECT COUNT(*) FROM customers WHERE created_at >= CURRENT_DATE - INTERVAL '30 days') as new_customers_30d,
         (SELECT COUNT(*) FROM sales_orders WHERE created_at >= CURRENT_DATE - INTERVAL '7 days') as orders_this_week,
-        (SELECT COALESCE(SUM(total_amount),0) FROM sales_orders WHERE created_at >= CURRENT_DATE - INTERVAL '7 days') as revenue_this_week
+        (SELECT COALESCE(SUM(total_amount),0) FROM sales_orders WHERE created_at >= CURRENT_DATE - INTERVAL '7 days') as revenue_this_week,
+        (SELECT COUNT(*) FROM purchase_orders WHERE status = 'Pending') as pending_purchases
     `);
     const overall = overallStatsResult.rows[0];
 
@@ -239,7 +240,8 @@ router.get('/', authMiddleware(['Admin', 'Sales', 'Accounts']), async (req, res)
         total_active_products: parseInt(overall.total_active_products) || 0,
         new_customers_30d: parseInt(overall.new_customers_30d) || 0,
         orders_this_week: parseInt(overall.orders_this_week) || 0,
-        revenue_this_week: parseFloat(overall.revenue_this_week) || 0
+        revenue_this_week: parseFloat(overall.revenue_this_week) || 0,
+        pending_purchases: parseInt(overall.pending_purchases) || 0
       }
     });
 

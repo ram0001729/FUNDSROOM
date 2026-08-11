@@ -36,6 +36,7 @@ import StockOut from './pages/inventory/StockOut';
 import LowStock from './pages/inventory/LowStock';
 import Warehouses from './pages/inventory/Warehouses';
 
+import Purchases from './pages/Purchases';
 import Outstanding from './pages/Outstanding';
 
 const PrivateRoute = ({ children }) => {
@@ -89,8 +90,9 @@ const App = () => {
           <Route path="/crm/follow-ups" element={<FollowUps />} />
           <Route path="/crm/notes" element={<Notes />} />
           
-          <Route path="/purchases/orders" element={<Placeholder title="Purchase Orders" />} />
-          <Route path="/purchases/receive" element={<Placeholder title="Receive Goods" />} />
+          <Route path="/purchases" element={<Purchases />} />
+          <Route path="/purchases/orders" element={<Purchases />} />
+          <Route path="/purchases/receive" element={<Purchases />} />
           
           <Route path="/dispatch/pending" element={<WarehouseDispatch />} />
           <Route path="/dispatch/completed" element={<Placeholder title="Dispatched Orders" />} />
