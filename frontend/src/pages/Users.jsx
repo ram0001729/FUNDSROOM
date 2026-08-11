@@ -27,9 +27,11 @@ const Users = () => {
     try {
       setLoading(true);
       const res = await api.get('/users');
-      setUsersList(res.data.data || []);
+      const list = Array.isArray(res.data?.data) ? res.data.data : Array.isArray(res.data) ? res.data : [];
+      setUsersList(list);
     } catch (error) {
       console.error('Failed to fetch users:', error);
+      setUsersList([]);
     } finally {
       setLoading(false);
     }
