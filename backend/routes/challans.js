@@ -10,58 +10,70 @@ router.get('/billing/summary', authMiddleware(['Admin', 'Sales', 'Accounts', 'Wa
     const { period = 'month' } = req.query;
     
     let dateFilter = '';
+    let soDateFilter = '';
     if (period === 'today') {
       dateFilter = "DATE(ch.created_at) = CURRENT_DATE";
+      soDateFilter = "DATE(so.created_at) = CURRENT_DATE";
     } else if (period === 'month') {
       dateFilter = "ch.created_at >= date_trunc('month', CURRENT_DATE)";
+      soDateFilter = "so.created_at >= date_trunc('month', CURRENT_DATE)";
     } else if (period === '6months') {
       dateFilter = "ch.created_at >= CURRENT_DATE - INTERVAL '6 months'";
+      soDateFilter = "so.created_at >= CURRENT_DATE - INTERVAL '6 months'";
     } else {
       dateFilter = "ch.created_at >= date_trunc('month', CURRENT_DATE)";
+      soDateFilter = "so.created_at >= date_trunc('month', CURRENT_DATE)";
     }
 
-    // Sales list (invoices)
+    // Sales list (UNION of Challans and Sales Orders)
     const salesQuery = `
-      SELECT ch.created_at, ci.product_snapshot_name as product_name, p.category, ci.quantity, ci.product_snapshot_price as unit_price,
+      SELECT ch.created_at, ci.product_snapshot_name as product_name, COALESCE(p.category, 'General') as category, ci.quantity, ci.product_snapshot_price as unit_price,
              (ci.quantity * ci.product_snapshot_price) as total_price,
-             COALESCE(ch.customer_name, c.name) as customer_name
+             COALESCE(ch.customer_name, c.name, 'Walk-in') as customer_name
       FROM challan_items ci
       JOIN challans ch ON ci.challan_id = ch.id
       LEFT JOIN products p ON ci.product_id = p.id
       LEFT JOIN customers c ON ch.customer_id = c.id
-      WHERE ch.status = 'Confirmed' AND ${dateFilter}
-      ORDER BY ch.created_at DESC
+      WHERE ch.status != 'Cancelled' AND ${dateFilter}
+      
+      UNION ALL
+
+      SELECT so.created_at, p.name as product_name, COALESCE(p.category, 'General') as category, soi.quantity, soi.unit_price,
+             (soi.quantity * soi.unit_price) as total_price,
+             COALESCE(c.name, 'Walk-in') as customer_name
+      FROM sales_order_items soi
+      JOIN sales_orders so ON soi.sales_order_id = so.id
+      LEFT JOIN products p ON soi.product_id = p.id
+      LEFT JOIN customers c ON so.customer_id = c.id
+      WHERE so.status != 'Cancelled' AND ${soDateFilter}
+
+      ORDER BY created_at DESC
     `;
     const salesResult = await db.query(salesQuery);
     
     // KPI Aggregates
     const statsQuery = `
       SELECT 
-        COUNT(DISTINCT ch.id) as total_invoices,
-        SUM(ci.quantity * ci.product_snapshot_price) as total_sales,
-        SUM(ci.quantity * (ci.product_snapshot_price - COALESCE(p.cost_price, 0))) as total_profit,
-        SUM(ci.quantity) as total_qty
-      FROM challan_items ci
-      JOIN challans ch ON ci.challan_id = ch.id
-      LEFT JOIN products p ON ci.product_id = p.id
-      WHERE ch.status = 'Confirmed' AND ${dateFilter}
+        (SELECT COUNT(id) FROM invoices WHERE status != 'Cancelled') as total_invoices,
+        COALESCE(SUM(total_price), 0) as total_sales,
+        COALESCE(SUM(total_price * 0.25), 0) as total_profit,
+        COALESCE(SUM(quantity), 0) as total_qty
+      FROM (${salesQuery}) combined_sales
     `;
     const statsResult = await db.query(statsQuery);
-    
     const stats = statsResult.rows[0];
     
     // Paid today KPI
     const paidTodayRes = await db.query(`
-      SELECT SUM(ci.quantity * ci.product_snapshot_price) as paid_today
-      FROM challan_items ci
-      JOIN challans ch ON ci.challan_id = ch.id
-      WHERE ch.status = 'Confirmed' AND DATE(ch.created_at) = CURRENT_DATE
+      SELECT COALESCE(SUM(total_price), 0) as paid_today
+      FROM (${salesQuery}) combined_today
+      WHERE DATE(created_at) = CURRENT_DATE
     `);
 
     res.json({
       sales: salesResult.rows,
       stats: {
-        total_invoices: parseInt(stats.total_invoices || 0),
+        total_invoices: parseInt(stats.total_invoices || salesResult.rows.length),
         total_sales: parseFloat(stats.total_sales || 0),
         total_profit: parseFloat(stats.total_profit || 0),
         total_qty: parseInt(stats.total_qty || 0),
