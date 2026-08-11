@@ -49,7 +49,7 @@ const Notes = () => {
           <p className="text-sm text-gray-500 mt-1">Review recent interactions and logged notes</p>
         </div>
         <div className="relative w-full md:w-72">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#1B512D] stroke-[2.5]" size={18} />
           <input 
             type="text" 
             placeholder="Search customers..." 

@@ -130,13 +130,15 @@ const Layout = () => {
           {/* Middle: Search Bar */}
           <div className="flex-1 max-w-lg hidden md:block px-4">
             <div className="relative group">
-              <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
-                <Search size={18} className="text-[#1B512D]/70 group-focus-within:text-[#1B512D] transition-colors" />
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <div className="p-1.5 bg-[#1B512D] text-[#73E2A7] rounded-full shadow-md flex items-center justify-center group-focus-within:bg-[#e34234] group-focus-within:text-white transition-all duration-300">
+                  <Search size={14} strokeWidth={3} />
+                </div>
               </div>
               <input 
                 type="text" 
                 placeholder="Search anything..." 
-                className="w-full pl-12 pr-5 py-2.5 bg-white/50 hover:bg-white/70 backdrop-blur-lg border border-white/70 rounded-full text-[13px] text-gray-800 focus:outline-none focus:bg-white/90 focus:ring-2 focus:ring-[#1B512D]/30 focus:border-white transition-all placeholder-gray-500 shadow-inner"
+                className="w-full pl-11 pr-5 py-2 bg-white/70 hover:bg-white/90 backdrop-blur-lg border border-white/80 rounded-full text-[13px] font-medium text-gray-800 focus:outline-none focus:bg-white focus:ring-2 focus:ring-[#1B512D]/30 focus:border-[#1B512D]/40 transition-all placeholder-gray-500 shadow-sm"
               />
             </div>
           </div>
