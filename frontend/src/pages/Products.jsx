@@ -131,9 +131,7 @@ const Products = () => {
       if (imageFile && productId) {
         const imgData = new FormData();
         imgData.append('image', imageFile);
-        await api.post(`/products/${productId}/image`, imgData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
+        await api.post(`/products/${productId}/image`, imgData);
       }
 
       setIsModalOpen(false);
@@ -170,9 +168,7 @@ const Products = () => {
     data.append('file', bulkFile);
 
     try {
-      const res = await api.post('/products/bulk-upload', data, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
+      const res = await api.post('/products/bulk-upload', data);
       alert(res.data.message);
       setIsBulkModalOpen(false);
       fetchProducts();
