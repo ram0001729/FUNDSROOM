@@ -159,7 +159,7 @@ router.get('/:id', authMiddleware(['Admin', 'Sales', 'Accounts', 'Warehouse']), 
 });
 
 // Create new challan / sale
-router.post('/', authMiddleware(['Admin', 'Sales']), async (req, res) => {
+router.post('/', authMiddleware(['Admin', 'Sales', 'Warehouse', 'Accounts']), async (req, res) => {
   try {
     const { customer_id, customer_name, customer_mobile, status = 'Draft', items, sales_source = 'OFFLINE' } = req.body;
     
@@ -331,7 +331,7 @@ router.post('/from-order/:sales_order_id', authMiddleware(['Admin', 'Warehouse']
 });
 
 // Update status
-router.put('/:id/status', authMiddleware(['Admin', 'Sales']), async (req, res) => {
+router.put('/:id/status', authMiddleware(['Admin', 'Sales', 'Warehouse', 'Accounts']), async (req, res) => {
   try {
     const { status } = req.body;
     if (!['Draft', 'Confirmed', 'Cancelled'].includes(status)) {
