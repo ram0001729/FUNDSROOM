@@ -2,6 +2,9 @@
 
 A full-stack Enterprise Resource Planning (ERP) system designed for comprehensive business management, including inventory, sales, challan generation, and invoicing.
 
+## Live Demos
+- **Frontend App**: [https://fundsroom-git-main-mekalaramcharan21-1145s-projects.vercel.app](https://fundsroom-git-main-mekalaramcharan21-1145s-projects.vercel.app/)
+- **Backend API**: [https://fundsroom-tyl2.onrender.com](https://fundsroom-tyl2.onrender.com)
 ## Tech Stack
 
 ### Frontend
