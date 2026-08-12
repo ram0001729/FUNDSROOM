@@ -39,9 +39,9 @@ const Login = () => {
   const selectRole = (role) => {
     const roles = {
       Admin: { user: 'admin', pass: 'admin123' },
-      Sales: { user: 'sales_user', pass: 'admin123' },
-      Warehouse: { user: 'warehouse_user', pass: 'admin123' },
-      Accounts: { user: 'accounts_user', pass: 'admin123' }
+      Sales: { user: 'sales', pass: 'admin123' },
+      Warehouse: { user: 'warehouse', pass: 'admin123' },
+      Accounts: { user: 'accounts', pass: 'admin123' }
     };
     if (roles[role]) {
       setUsername(roles[role].user);
@@ -84,7 +84,7 @@ const Login = () => {
               type="button" 
               onClick={() => selectRole('Sales')} 
               className={`text-xs font-bold py-2 rounded-lg transition-all text-center cursor-pointer ${
-                username === 'sales_user' 
+                username === 'sales' 
                   ? 'bg-[#1B512D] text-white shadow-md scale-105' 
                   : 'text-gray-700 hover:bg-white/80'
               }`}
@@ -95,7 +95,7 @@ const Login = () => {
               type="button" 
               onClick={() => selectRole('Warehouse')} 
               className={`text-xs font-bold py-2 rounded-lg transition-all text-center cursor-pointer ${
-                username === 'warehouse_user' 
+                username === 'warehouse' 
                   ? 'bg-[#1B512D] text-white shadow-md scale-105' 
                   : 'text-gray-700 hover:bg-white/80'
               }`}
@@ -106,7 +106,7 @@ const Login = () => {
               type="button" 
               onClick={() => selectRole('Accounts')} 
               className={`text-xs font-bold py-2 rounded-lg transition-all text-center cursor-pointer ${
-                username === 'accounts_user' 
+                username === 'accounts' 
                   ? 'bg-[#1B512D] text-white shadow-md scale-105' 
                   : 'text-gray-700 hover:bg-white/80'
               }`}
