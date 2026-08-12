@@ -4,7 +4,7 @@ import useAuthStore from '../store/authStore';
 import api from '../api/axios';
 import Logo from './Logo';
 import Chatbot from './Chatbot';
-import { Bot, BotMessageSquare, LayoutDashboard, Package, ArrowRightLeft, Receipt, BarChart2, Briefcase, Settings, Search, Bell, Home, Globe, ChevronDown, ChevronUp, Users, ShoppingCart, Activity, FileText, CreditCard, Truck, LogOut } from 'lucide-react';
+import { Bot, BotMessageSquare, LayoutDashboard, Package, ArrowRightLeft, Receipt, BarChart2, Briefcase, Settings, Search, Bell, Home, Globe, ChevronDown, ChevronUp, Users, ShoppingCart, Activity, FileText, CreditCard, Truck, LogOut, Menu, X } from 'lucide-react';
 const Layout = () => {
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
@@ -12,6 +12,7 @@ const Layout = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [language, setLanguage] = useState(() => localStorage.getItem('app_language') || 'EN');
   
   const [counts, setCounts] = useState({
@@ -27,6 +28,10 @@ const Layout = () => {
     fetchSidebarCounts();
     const interval = setInterval(fetchSidebarCounts, 8000);
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
   }, [location.pathname]);
 
   const fetchSidebarCounts = async () => {
@@ -146,7 +151,13 @@ const Layout = () => {
         <div className="max-w-7xl mx-auto h-[64px] bg-gradient-to-r from-[#a7f3d0]/70 via-[#bbf7d0]/80 to-[#a7f3d0]/70 backdrop-blur-xl border border-white/80 shadow-[0_8px_32px_rgba(16,185,129,0.25)] rounded-full px-6 flex items-center justify-between transition-all">
         
           {/* Left side: Logo & Brand */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1 sm:gap-3">
+            <button 
+              className="lg:hidden p-2 -ml-2 text-[#1B512D] hover:bg-emerald-100/50 rounded-full transition-colors"
+              onClick={() => setIsMobileMenuOpen(true)}
+            >
+              <Menu size={22} />
+            </button>
             <Logo to="/dashboard" />
           </div>
           
@@ -261,10 +272,26 @@ const Layout = () => {
       </header>
 
       {/* Main Body (Sidebar + Content) */}
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden relative">
         
+        {/* Mobile Overlay */}
+        {isMobileMenuOpen && (
+          <div 
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-30 lg:hidden"
+            onClick={() => setIsMobileMenuOpen(false)}
+          ></div>
+        )}
+
         {/* Sidebar */}
-        <aside className="w-[240px] bg-[#1B512D] text-white flex flex-col py-5 flex-shrink-0 z-20 transition-all rounded-tr-[24px] shadow-xl overflow-y-auto overflow-x-hidden">
+        <aside className={`w-[240px] bg-[#1B512D] text-white flex flex-col py-5 flex-shrink-0 z-40 transition-transform duration-300 rounded-r-[24px] shadow-xl overflow-y-auto overflow-x-hidden fixed lg:static inset-y-0 left-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
+          {/* Mobile Header for Sidebar */}
+          <div className="flex justify-between items-center px-4 lg:hidden mb-2">
+            <span className="font-bold text-[#73E2A7] text-lg tracking-wide">Menu</span>
+            <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 hover:bg-white/10 rounded-full text-white transition-colors">
+              <X size={20} />
+            </button>
+          </div>
+
           <nav className="flex-1 flex flex-col px-4">
             
             {/* User & Role Badge Card */}
@@ -376,9 +403,7 @@ const Layout = () => {
             })}
           </nav>
 
-          <div className="mt-auto px-4 pb-6">
-            <p className="text-[10px] text-[#73E2A7] text-center opacity-60 uppercase tracking-wider">© 2024 DistribuCore</p>
-          </div>
+
         </aside>
 
         {/* Page Content */}
