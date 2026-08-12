@@ -46,7 +46,7 @@ async function testChallan() {
         await db.query(`
           INSERT INTO stock_movements (product_id, quantity_changed, movement_type, reason, created_by)
           VALUES ($1, $2, $3, $4, $5)
-        `, [it.product_id, it.quantity, 'OUT', \`Sales Challan \${challan_number}\`, 1]);
+        `, [it.product_id, it.quantity, 'OUT', `Sales Challan ${challan_number}`, 1]);
       }
 
       await db.query(`

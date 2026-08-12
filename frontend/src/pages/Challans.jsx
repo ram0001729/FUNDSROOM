@@ -97,7 +97,12 @@ const Challans = () => {
       fetchChallans();
     } catch (error) {
       console.error('Failed to create challan:', error);
-      alert(error.response?.data?.error || 'Failed to create challan.');
+      const data = error.response?.data;
+      if (data?.message === 'Insufficient stock') {
+        alert(`Insufficient stock for ${data.product}. Available: ${data.available_stock}, Requested: ${data.requested_quantity}`);
+      } else {
+        alert(data?.error || data?.message || 'Failed to create challan.');
+      }
     } finally {
       setSubmitting(false);
     }
