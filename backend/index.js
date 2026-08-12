@@ -16,6 +16,9 @@ const allowedOrigins = [
   'https://fundsroom-frontend.pages.dev',
   /\.fundsroomfrontend\.pages\.dev$/,
   /\.fundsroom-frontend\.pages\.dev$/,
+  /\.vercel\.app$/,
+  'https://fundsroomfrontend.vercel.app',
+  'https://fundsroom-frontend.vercel.app'
 ];
 
 app.use(cors({
