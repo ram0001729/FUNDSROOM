@@ -130,7 +130,7 @@ router.get('/', authMiddleware(['Admin', 'Sales', 'Accounts']), async (req, res)
         (SELECT COUNT(*) FROM invoices) as total_invoices,
         (SELECT SUM(amount) FROM payments) as payments_received,
         (SELECT COUNT(*) FROM invoices WHERE status = 'Overdue') as overdue_invoices,
-        (SELECT SUM(total_amount - amount_paid) FROM invoices WHERE status IN ('Pending', 'Overdue')) as outstanding_balance
+        (SELECT SUM(total_amount - amount_paid) FROM invoices WHERE status IN ('Pending', 'Overdue', 'Partial')) as outstanding_balance
     `;
     const accountsStatsResult = await db.query(accountsStatsQuery);
     const accounts = accountsStatsResult.rows[0];

@@ -26,7 +26,11 @@ async function seed() {
       ('Premium Widget A', 'WGT-001', 'Electronics', 1500.00, 1000.00, 500, 50, 'Aisle 1'),
       ('Standard Gadget B', 'GDT-002', 'Electronics', 800.00, 500.00, 1000, 100, 'Aisle 2'),
       ('Heavy Duty Tool C', 'HTL-003', 'Hardware', 3500.00, 2500.00, 200, 20, 'Aisle 3'),
-      ('Office Chair D', 'CHR-004', 'Furniture', 4500.00, 3000.00, 150, 10, 'Warehouse B')
+      ('Office Chair D', 'CHR-004', 'Furniture', 4500.00, 3000.00, 150, 10, 'Warehouse B'),
+      ('Pallet Jack', 'WH-PJ-001', 'Equipment', 25000.00, 20000.00, 15, 2, 'Loading Dock'),
+      ('Packing Tape (Box of 50)', 'WH-PT-050', 'Supplies', 1200.00, 800.00, 200, 30, 'Supply Room'),
+      ('Corrugated Boxes Large', 'WH-BX-L', 'Packaging', 150.00, 90.00, 5000, 500, 'Aisle 5'),
+      ('Forklift Battery', 'WH-FB-01', 'Equipment Parts', 45000.00, 35000.00, 5, 1, 'Maintenance Bay')
       RETURNING id, name, unit_price
     `);
     const products = prodRes.rows;
